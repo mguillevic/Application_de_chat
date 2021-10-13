@@ -15,12 +15,15 @@ public class Fenetre extends JFrame{
 	private JButton sendButton = new JButton("SEND");
 	private JPanel panelWriteMessage = new JPanel();
 	
+	private ContactPanel contactPanel = new ContactPanel();
+	
 	public Fenetre() {
 		this.setTitle("Application Chat");
 		this.setSize(700,700);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
+		this.placerContactPanel();
 		this.placerMessageField();
 		this.placerConversationPanel();
 		
@@ -41,6 +44,12 @@ public class Fenetre extends JFrame{
 		panelWriteMessage.add(sendButton,BorderLayout.EAST);
 		sendButton.addActionListener(new SendListener(messageField,sendButton,convPanel));
 		this.add(panelWriteMessage,BorderLayout.SOUTH);
+	}
+	
+	private void placerContactPanel() {
+		contactPanel.setBounds(0,0,100,getHeight());
+		contactPanel.afficherContacts();
+		this.add(contactPanel);
 	}
 	
 	public ConversationPanel getConvPanel() {
