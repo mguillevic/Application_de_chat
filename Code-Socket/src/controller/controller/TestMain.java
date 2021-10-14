@@ -24,18 +24,24 @@ public class TestMain {
 		}
 		System.out.println(connexion);
 		
+		services.recupererAmisClient();
+		
 		String pseudoDest="";
-		boolean pseudoAmis =false;
-		while(!pseudoAmis) {
+		String pseudoAmis ="false";
+		while(pseudoAmis.equals("false")) {
 			System.out.println("A qui voulez vous parlez : ");
 			pseudoDest = stdIn.readLine();
 			pseudoAmis = services.selectionnerAmis(pseudoDest);
 		}
 		System.out.println(pseudoAmis);
+		if(pseudoAmis.equals("pseudoConnecte")) {
+			EchoClient.amisConnecte.replace(pseudoDest, "true");
+		}
 		
 		
-		
+		services.recupererMessagesRecu(pseudoDest);
 		services.commencerConversation(pseudoDest);
+		
 		
 		/*boolean changerConv = false;
 		while(!changerConv) {
@@ -51,7 +57,7 @@ public class TestMain {
 	
 	}
 	
-	public String conversation(Service services,BufferedReader stdIn) throws IOException {
+	/*public String conversation(Service services,BufferedReader stdIn) throws IOException {
 		String pseudoDest="";
 		boolean pseudoAmis =false;
 		while(!pseudoAmis) {
@@ -63,6 +69,6 @@ public class TestMain {
 		
 		services.commencerConversation(pseudoDest);
 		return pseudoDest;
-	}
+	}*/
 
 }

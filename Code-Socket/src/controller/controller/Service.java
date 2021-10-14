@@ -1,6 +1,7 @@
 //package controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class Service {
@@ -19,12 +20,16 @@ public class Service {
 		return echoClient.connexion(pseudo);
 	}
 	
-	public List<String> recupererAmis() throws IOException {
-		return echoClient.recupererPseudosAmis();
+	public void recupererAmis() throws IOException {
+		echoClient.recupererPseudosAmis();
 	}
 	
-	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
+	public String selectionnerAmis(String pseudoAmis)throws IOException  {
 		return echoClient.selectionnerAmis(pseudoAmis);
+	}
+	
+	public void recupererMessagesRecu(String pseudoDest)throws IOException {
+		echoClient.recupererMessagesRecus(pseudoDest);
 	}
 	
 	public void commencerConversation(String pseudoDest)throws IOException  {
@@ -39,8 +44,8 @@ public class Service {
 		return null;
 	}
 	
-	public List<String> recupererAmisClient(String pseudo) {
-		return null;
+	public void recupererAmisClient() throws IOException{
+		echoClient.recupererPseudosAmis();
 	}
 	
 }

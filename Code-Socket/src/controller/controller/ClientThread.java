@@ -20,7 +20,8 @@ public class ClientThread
 	
 	private Socket clientSocket;
 	private Boolean connexion = false;
-	private String pseudoDestinataire="";
+	public String pseudoDestinataire="";
+	
 	
 	ClientThread(Socket s) {
 		this.clientSocket = s;

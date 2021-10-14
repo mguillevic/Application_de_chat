@@ -8,6 +8,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class EchoClient {
 
-	public static boolean finConv = false;
+	
 	Socket echoSocket = null;
     PrintStream socOut = null;
     BufferedReader stdIn = null;
@@ -25,14 +26,20 @@ public class EchoClient {
 	String ip;
 	String ipServer;
 	String portServer;
-	public static String pseudo;
 	Client client;
+	public static String pseudo;
 	public static String pseudoDestinataire;
+	public static boolean messagesReceived=false;
+	public static boolean connection=false;
+	public static HashMap<String,HashMap<Integer,String>> messagesRecus;
+	public static HashMap<String,String> amisConnecte;
 	
 	public EchoClient() throws IOException {
 		client = new Client(InetAddress.getLocalHost().getHostAddress());
 		ipServer = "127.0.0.1";
 		portServer = "1234";
+		messagesRecus = new HashMap<String,HashMap<Integer,String>>();
+		amisConnecte = new HashMap<String,String>();
 		
 		try {
       	    // creation socket ==> connection
@@ -63,20 +70,48 @@ public class EchoClient {
 			this.pseudo=pseudo;
 			client.setPseudo(pseudo);
 			client.setConnexion(true);
+			connection=true;
 		}
 		return connection;
 	}
 	
-	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
-		boolean pseudoTrouve=false;
+	public String selectionnerAmis(String pseudoAmis)throws IOException  {
 		//Envoi au serveur
     	socOut.println(pseudoAmis);
     		
     	//Reponse du serveur
     	String reponseServeur = socIn.readLine();
-    	pseudoTrouve = reponseServeur.equals("pseudoConnecte");
     	pseudoDestinataire = pseudoAmis;
-    	return pseudoTrouve;
+    	return reponseServeur;
+	}
+	
+	public boolean recupererMessagesRecus(String pseudoDest)throws IOException {
+		BufferedReader lecteur = null;
+		String file ="../../../res/"+ pseudo + "MessagesRecus.txt";
+		List<String> messages = null;
+	    String ligne;
+	   
+	    
+	    if(messagesRecus.containsKey(pseudoDest)) {
+	    	messagesRecus.replace(pseudoDest,new HashMap<Integer,String>());
+	    	try{
+		    	lecteur = new BufferedReader(new FileReader(file));
+		    	int i=0;
+		    	while ((ligne = lecteur.readLine()) != null) {
+		  	      	String [] reponses = ligne.split(";");
+		  	      	if(reponses[0].equals(pseudoDest)){
+		  	      		messagesReceived=true;
+		  	      		messagesRecus.get(pseudoDest).put(i,reponses[1]);
+		  	      		i++;
+		  	      	}
+		  	      	
+		    	}
+		  	    lecteur.close();
+		    }catch(FileNotFoundException exc){
+		    	  System.out.println("Erreur d'ouverture");
+		    } 
+	    }
+	    return messagesReceived;
 	}
 	
 	public void commencerConversation(String pseudoDest)throws IOException  {
@@ -92,23 +127,21 @@ public class EchoClient {
 		return false;
 	}
 	
-	public List<String> recupererPseudosAmis() throws IOException{
+	public void recupererPseudosAmis() throws IOException{
 		BufferedReader lecteur = null;
-		String file = client.getPseudo() + "Amis.txt";
-		List<String> pseudosAmis = null;
+		String file = "../../../res/"+pseudo + "Amis.txt";
 	    String ligne;
 
 	    try{
 	    	lecteur = new BufferedReader(new FileReader(file));
 	    	while ((ligne = lecteur.readLine()) != null) {
-	  	      	pseudosAmis.add(ligne);
+	  	      	amisConnecte.put(ligne,"false");
+	  	      	messagesRecus.put(ligne, null);
 	    	}
-	    	client.setAmis(pseudosAmis);
 	  	    lecteur.close();
 	    }catch(FileNotFoundException exc){
 	    	  System.out.println("Erreur d'ouverture");
 	    } 
-	    return pseudosAmis;
 	  
 	}
 	

@@ -1,5 +1,7 @@
 //package controller;
 import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
@@ -16,9 +18,7 @@ public class ClientThreadConversation extends Thread{
 		clientSocketReceiver=s2;
 	}
 	
-	public void ecrireMessage(String pseudoSender) {
-		
-	}
+	
 	
 	public void run() {
   	  try {
@@ -36,6 +36,7 @@ public class ClientThreadConversation extends Thread{
 				  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(line[1]);
 				  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
 			  }else {
+				  
 				  socOut.println(line[1]);
 			  }
 		  }
