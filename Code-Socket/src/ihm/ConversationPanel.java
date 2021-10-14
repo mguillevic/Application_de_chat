@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,11 +9,11 @@ import javax.swing.JTextArea;
 
 public class ConversationPanel extends JTextArea {
 	private List<String> listeMessages;
-	private int textSize;
+	private int textSize=20;
 	
 	public ConversationPanel() {
 		listeMessages = new LinkedList<String>();
-		textSize=10;
+		this.setFont(new Font("Sherif",Font.PLAIN,textSize));
 		this.setEditable(false);
 	}
 	
@@ -24,9 +25,4 @@ public class ConversationPanel extends JTextArea {
 		this.listeMessages=uneListe;
 	}
 	
-	public void writeMessages(){
-		for(String message:listeMessages){
-			this.append(message+"\n\n");
-		}
-	}
-}
+}//
