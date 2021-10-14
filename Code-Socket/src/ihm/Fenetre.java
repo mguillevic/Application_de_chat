@@ -38,11 +38,27 @@ public class Fenetre extends JFrame{
 		this.add(scroll);
 	}
 	
+	public JTextField getMessageField() {
+		return messageField;
+	}
+
+	public JButton getSendButton() {
+		return sendButton;
+	}
+
+	public JPanel getPanelWriteMessage() {
+		return panelWriteMessage;
+	}
+
+	public ContactPanel getContactPanel() {
+		return contactPanel;
+	}
+
 	private void placerMessageField() {
 		messageField.setFont(new Font("Sherif",Font.PLAIN,30));
 		panelWriteMessage.add(messageField);
 		panelWriteMessage.add(sendButton,BorderLayout.EAST);
-		sendButton.addActionListener(new SendListener(messageField,sendButton,convPanel));
+		sendButton.addActionListener(new SendListener(this));
 		this.add(panelWriteMessage,BorderLayout.SOUTH);
 	}
 	

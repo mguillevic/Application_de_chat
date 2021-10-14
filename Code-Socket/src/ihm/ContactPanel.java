@@ -17,17 +17,24 @@ public class ContactPanel extends JPanel {
 		setBackground(Color.WHITE);
 	}
 	
+	public List<JLabel> getListeLabels() {
+		return listeLabels;
+	}
+
 	private void setListeTest(){
 		for(int i=0;i<50;i++){
 			listeContacts.add("Contact "+i);
 		}
 	}
+
 	public void afficherContacts() {
 		setListeTest();
 		int y=20;
+		//SendListener listener = new SendListener
 		for(String contact : listeContacts) {
 			JLabel label = new JLabel(contact);
 			listeLabels.add(label);
+			//label.add(
 			preferredVerticalSize+=21;
 			this.add(label);
 		}
