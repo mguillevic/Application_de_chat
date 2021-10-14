@@ -1,3 +1,6 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -18,10 +21,31 @@ public class FenetreAddContact extends JFrame {
 		
 		inputContact.setBounds(0,0,4*getWidth()/5-20,getHeight()-10);
 		addButton.setBounds(4*getWidth()/5, 0, getWidth()/5-20, getHeight()-10);
+		addButton.addActionListener(new UpdateContactListener(this));
 		
 		this.add(inputContact);
 		this.add(addButton);
 		
 		this.setVisible(true);
+	}
+	
+	public class UpdateContactListener implements ActionListener{
+		
+		private FenetreAddContact popup;
+		public UpdateContactListener(FenetreAddContact f) {
+			popup=f;
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(inputContact.getText()!="") {
+				String nomContact = inputContact.getText();
+				panel.revalidate();
+				panel.addContact(nomContact);
+				panel.repaint();
+				popup.setVisible(false);
+				popup.dispose();
+			}
+		}
+		
 	}
 }

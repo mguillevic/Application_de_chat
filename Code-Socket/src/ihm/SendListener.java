@@ -24,6 +24,7 @@ public class SendListener implements ActionListener{
 			fenetre.getMessageField().setText("");
 		}else if(e.getSource()==fenetre.getAddContactButton()) {
 			//TODO Ouvrir fenêtre pop-up
+			FenetreAddContact popup = new FenetreAddContact(fenetre.getContactPanel());
 		}
 	}
 }//

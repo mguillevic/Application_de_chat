@@ -34,6 +34,7 @@ public class ContactPanel extends JPanel {
 		label.setBackground(null);
 		label.addMouseListener(listener);  //Rend les labels cliquables
 		listeLabels.add(label);
+		this.add(label);
 	}
 	
 	private void setListesTest(){
@@ -44,12 +45,10 @@ public class ContactPanel extends JPanel {
 	}
 //
 	public void afficherContacts() {
-		this.removeAll();
-		setListesTest();
 		for(JLabel label : listeLabels) {
 			preferredVerticalSize+=21;  //On ajuste la taille du conteneur en fonction du nombre de contact
 			this.add(label);
 		}
-		this.setPreferredSize(new Dimension(100,preferredVerticalSize));
+		this.setPreferredSize(new Dimension(50,preferredVerticalSize));
 	}
 }

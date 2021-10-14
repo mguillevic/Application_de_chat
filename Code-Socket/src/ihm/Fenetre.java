@@ -67,11 +67,13 @@ public class Fenetre extends JFrame{
 	}
 
 	private void placerMessageField() {
+		SendListener listener = new SendListener(this);
 		messageField.setFont(new Font("Sherif",Font.PLAIN,30));
 		panelWriteMessage.add(addContactButton);
+		addContactButton.addActionListener(listener);
 		panelWriteMessage.add(messageField);
 		panelWriteMessage.add(sendButton);
-		sendButton.addActionListener(new SendListener(this));
+		sendButton.addActionListener(listener);
 		this.add(panelWriteMessage,BorderLayout.SOUTH);
 	}
 	
