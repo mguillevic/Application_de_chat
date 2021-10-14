@@ -51,7 +51,24 @@ public class EchoClient {
 		
 		String line;
 		
-		//Connexion
+		//Connexion terminal
+		/*boolean isConnected=false;
+		while(!isConnected){
+			System.out.print("Entrez votre pseudo: ");
+			pseudo=stdIn.readLine();
+			socOut.println(pseudo+";"+ip);  //Envoi du pseudo et de l'ip au serveur
+			
+			//Reponse du serveur
+			String connexion=socIn.readLine();
+			isConnected = connexion.equals("true");
+			if(!isConnected){
+				System.out.println("Le pseudo existe déjà, veuillez en choisir un autre");
+			}
+		}
+		System.out.println("Connexion réussie");*/
+		
+		
+		//Connexion ihm
 		boolean isConnected=false;
 		while(!isConnected){
 			System.out.print("Entrez votre pseudo: ");
