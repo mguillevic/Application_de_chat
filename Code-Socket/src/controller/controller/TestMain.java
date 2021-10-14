@@ -27,16 +27,16 @@ public class TestMain {
 		services.recupererAmisClient();
 		
 		String pseudoDest="";
-		String pseudoAmis ="false";
-		while(pseudoAmis.equals("false")) {
+		boolean pseudoAmis = false;
+		while(pseudoAmis==false) {
 			System.out.println("A qui voulez vous parlez : ");
 			pseudoDest = stdIn.readLine();
 			pseudoAmis = services.selectionnerAmis(pseudoDest);
 		}
+		
 		System.out.println(pseudoAmis);
-		if(pseudoAmis.equals("pseudoConnecte")) {
-			EchoClient.amisConnecte.replace(pseudoDest, "true");
-		}
+		services.ajouterAmis(pseudoDest);
+		
 		
 		
 		services.recupererMessagesRecu(pseudoDest);

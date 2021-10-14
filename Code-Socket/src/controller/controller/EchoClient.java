@@ -8,6 +8,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,29 +18,25 @@ import java.util.List;
 public class EchoClient {
 
 	
-	Socket echoSocket = null;
-    PrintStream socOut = null;
-    BufferedReader stdIn = null;
-    BufferedReader socIn = null;
-    ThreadSender ts;
-    ThreadReceiver tr;
-	String ip;
-	String ipServer;
-	String portServer;
-	Client client;
+	private Socket echoSocket = null;
+    private PrintStream socOut = null;
+    private BufferedReader stdIn = null;
+    private BufferedReader socIn = null;
+    private ThreadSender ts;
+    private ThreadReceiver tr;
+	private String ipServer;
+	private String portServer;
 	public static String pseudo;
 	public static String pseudoDestinataire;
-	public static boolean messagesReceived=false;
-	public static boolean connection=false;
+	public static boolean messagesReceived;
 	public static HashMap<String,HashMap<Integer,String>> messagesRecus;
-	public static HashMap<String,String> amisConnecte;
+	public static List<String> amis;
 	
 	public EchoClient() throws IOException {
-		client = new Client(InetAddress.getLocalHost().getHostAddress());
 		ipServer = "127.0.0.1";
 		portServer = "1234";
 		messagesRecus = new HashMap<String,HashMap<Integer,String>>();
-		amisConnecte = new HashMap<String,String>();
+		amis = new ArrayList<String>();
 		
 		try {
       	    // creation socket ==> connection
@@ -63,24 +60,22 @@ public class EchoClient {
 	
 	
 	public boolean connexion(String pseudo) throws IOException {
-		socOut.println(pseudo+";"+client.getIp()); 
+		socOut.println(pseudo); 
 		String connexion=socIn.readLine();
 		boolean connection = connexion.equals("true");
 		if(connection==true) {
 			this.pseudo=pseudo;
-			client.setPseudo(pseudo);
-			client.setConnexion(true);
 			connection=true;
 		}
 		return connection;
 	}
 	
-	public String selectionnerAmis(String pseudoAmis)throws IOException  {
+	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
 		//Envoi au serveur
     	socOut.println(pseudoAmis);
     		
     	//Reponse du serveur
-    	String reponseServeur = socIn.readLine();
+    	boolean reponseServeur = socIn.readLine().equals("true");
     	pseudoDestinataire = pseudoAmis;
     	return reponseServeur;
 	}
@@ -135,7 +130,7 @@ public class EchoClient {
 	    try{
 	    	lecteur = new BufferedReader(new FileReader(file));
 	    	while ((ligne = lecteur.readLine()) != null) {
-	  	      	amisConnecte.put(ligne,"false");
+	  	      	amis.add(ligne);
 	  	      	messagesRecus.put(ligne, null);
 	    	}
 	  	    lecteur.close();
@@ -147,6 +142,19 @@ public class EchoClient {
 	
 	public static void setPseudoDest(String pseudoDest) {
 		pseudoDestinataire=pseudoDest;
+	}
+	
+	public void ajouterAmis(String pseudo) {
+		amis.add(pseudo);
+	}
+	
+	public boolean chercherDansMesAmis(String pseudo) {
+		for(String s : amis) {
+			if(s.equals(pseudo)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void endEchoClient() throws IOException {

@@ -20,25 +20,24 @@ public class ClientThread
 	
 	private Socket clientSocket;
 	private Boolean connexion = false;
-	public String pseudoDestinataire="";
+	public static String pseudoDestinataire="";
+	public static String pseudo="";
 	
 	
 	ClientThread(Socket s) {
 		this.clientSocket = s;
 	}
 	
-	public boolean pseudoExiste(String pseudo, String ip){
-		HashMap<String, String> catalogueIP = EchoServerMultiThreaded.catalogueIP;
-		HashMap<String, Socket> catalogueSocket = EchoServerMultiThreaded.catalogueSocket;
-		HashMap<String, String> cataloguePseudos = EchoServerMultiThreaded.cataloguePseudo;
+	public boolean pseudoExiste(String pseudo){
 		
-		if (!catalogueIP.containsKey(pseudo)){
-			catalogueIP.put(pseudo,ip);
-			cataloguePseudos.put(pseudo, "true");
-			catalogueSocket.put(pseudo, clientSocket);
+		if (!EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudo)){
+			EchoServerMultiThreaded.cataloguePseudo.put(pseudo,"true");
+			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
+			ajouterClientAuCatalogue();
 			return true;
-		}else if(catalogueIP.containsKey(pseudo) && ip.equals(catalogueIP.get(pseudo))){
-			cataloguePseudos.replace(pseudo,"true");
+		}else if(EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudo)){
+			EchoServerMultiThreaded.cataloguePseudo.replace(pseudo,"true");
+			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
 			return true;
 		}else{
 			return false;
@@ -52,10 +51,9 @@ public class ClientThread
     		socIn = new BufferedReader(
     			new InputStreamReader(clientSocket.getInputStream()));    
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
-			String[] line = socIn.readLine().split(";");
-			String pseudo = line[0];
-			String ip = line[1];
-			connexion = pseudoExiste(pseudo,ip);
+			String line = socIn.readLine();
+			pseudo = line;
+			connexion = pseudoExiste(pseudo);
 			socOut.println(connexion);
 		}catch(IOException ex) {
 			System.err.println("Error in ConnexionThread: "+ex);
@@ -63,8 +61,8 @@ public class ClientThread
 		return connexion;
 	}
 	
-	public String pseudoDestinataire() {
-		String pseudoConnecte="false";
+	public boolean pseudoDestinataire() {
+		boolean pseudoExiste=false;
 		try {
 			BufferedReader socIn = null;
     		socIn = new BufferedReader(
@@ -72,31 +70,30 @@ public class ClientThread
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
     		pseudoDestinataire = socIn.readLine();
     		
-    		//Regarde si l'amis est connecté
-    		pseudoConnecte = String.valueOf(EchoServerMultiThreaded.catalogueIP.containsKey(pseudoDestinataire));
-    		if(pseudoConnecte.equals("true")) {
-    			socOut.println("pseudoConnecte");
-    			pseudoConnecte="pseudoConnecte";
-    			return pseudoConnecte;
-    		}
-    		
-    		//S'il n'est pas connecté regarde si le pseudo existe
-    		pseudoConnecte = String.valueOf(EchoServerMultiThreaded.catalogueIP.containsKey(pseudoDestinataire));
-    		if(pseudoConnecte.equals("true")) {
-    			socOut.println("pseudoNonConnecte");
-    			pseudoConnecte="pseudoNonConnecte";
-    			return pseudoConnecte;
-    		}
-    		
-    		    		
+    		//Regarde si l'amis existe
+    		pseudoExiste= EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudoDestinataire);	
+    		socOut.println(pseudoExiste);
     		
 		}catch(IOException ex) {
 			System.err.println("Error in ConnexionThread: "+ex);
 		}
 		
 		//Si le pseudo n'existe pas on renvoie false
-		return pseudoConnecte;
+		return pseudoExiste;
 
+	}
+	
+	public void ajouterClientAuCatalogue() {
+		String fileName = "../../../res/"+"catalogue.txt";
+		try {
+			FileWriter writer = new FileWriter(fileName,true);
+			String messageSent = pseudo;
+			writer.write(messageSent+"\r\n");
+			writer.close();
+		}
+		catch(IOException ioe){
+			 System.err.println(ioe.getMessage());
+		}
 	}
 	
 	
@@ -109,18 +106,18 @@ public class ClientThread
     		}
     		
     		boolean pseudoTrouve = false;
-    		String reponse="";
         	while (!pseudoTrouve) {
-        		reponse = pseudoDestinataire();
-        		pseudoTrouve = !reponse.equals("false");
+        		pseudoTrouve = pseudoDestinataire();
           	}
         	
+        	//Regarde si le destinataire est connecté
         	Socket clientSocketDestinataire = null;
-        	if(reponse.equals("pseudoConnecte")) {
+        	if(EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true")) {
         		clientSocketDestinataire = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
+        		
         	}
-    		
-        	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire);
+    		System.out.println(pseudo);
+        	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire,pseudo);
         	conversation.start();
         		
     		//Phase de l'envoi ou la reception du message

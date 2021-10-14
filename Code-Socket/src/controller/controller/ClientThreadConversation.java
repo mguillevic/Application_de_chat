@@ -12,12 +12,28 @@ public class ClientThreadConversation extends Thread{
 	
 	private Socket clientSocketSender;
 	private Socket clientSocketReceiver;
+	private String pseudo;
 	
-	ClientThreadConversation(Socket s1, Socket s2){
+	ClientThreadConversation(Socket s1, Socket s2,String p){
 		clientSocketSender=s1;
 		clientSocketReceiver=s2;
+		pseudo = p;
 	}
 	
+	
+	//Sauvegarde les message pour le client non connecté
+	public void sauvegarderMessage(String message) {
+		String fileName = "../../../res/"+ClientThread.pseudoDestinataire+"MessagesRecus.txt";
+		try {
+			FileWriter writer = new FileWriter(fileName,true);
+			String messageSent = pseudo+";"+message;
+			writer.write(messageSent+"\r\n");
+			writer.close();
+		}
+		catch(IOException ioe){
+			 System.err.println(ioe.getMessage());
+		}
+	}
 	
 	
 	public void run() {
@@ -25,21 +41,65 @@ public class ClientThreadConversation extends Thread{
   		BufferedReader socIn = null;
 		socIn = new BufferedReader(new InputStreamReader(clientSocketSender.getInputStream())); 
 		PrintStream socOut=null;
+		
 		if(clientSocketReceiver!=null) {
+			
 			socOut = new PrintStream(clientSocketReceiver.getOutputStream());
 		}
+		
 		while (true) {
 		  String[] line = socIn.readLine().split(";");
-		  //Envoi au destinataire le message
-		  if(clientSocketReceiver!=null) {
+		  
+		  //On verifie que le destinataire est connecté
+		  if(clientSocketReceiver==null && EchoServerMultiThreaded.cataloguePseudo.get(ClientThread.pseudoDestinataire).equals("true")) {
+			  			  
+			  
+			  //Si le client vient de se connecter
+			  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(ClientThread.pseudoDestinataire);
+			  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
+			  
+			  
+	      }else if(clientSocketReceiver!=null){
+	    	  
+	    	//Envoi au destinataire le message
 			  if(line[0].equals("Oui")) {
-				  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(line[1]);
-				  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
-			  }else {
+				  			  
+				  ClientThread.pseudoDestinataire =line[1];
+				  System.out.println(ClientThread.pseudoDestinataire);
+				  clientSocketReceiver=null;
+				  socOut=null;
+				  if(EchoServerMultiThreaded.cataloguePseudo.get(ClientThread.pseudoDestinataire).equals("true")) {
+					  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(ClientThread.pseudoDestinataire);
+					  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
+				  }
 				  
+				  
+			  }else {
 				  socOut.println(line[1]);
 			  }
-		  }
+			  
+	      }else {
+	    	  
+	    	  //Si le client n'est pas connecté on sauvegarde le message si le client ne veux pas changer de destinataire
+	    	  if(line[0].equals("Oui")) {
+	    		  
+	    		  ClientThread.pseudoDestinataire =line[1];
+				  clientSocketReceiver=null;
+				  socOut=null;
+				  if(EchoServerMultiThreaded.cataloguePseudo.get(ClientThread.pseudoDestinataire).equals("true")) {
+					  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(ClientThread.pseudoDestinataire);
+					  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
+				  }
+				  
+				  
+			  }else {
+				  sauvegarderMessage(line[1]);
+			  }
+	    	  
+	      }
+		  
+		  
+		  
 		 
 		  
 		}

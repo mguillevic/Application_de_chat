@@ -14,7 +14,6 @@ import java.util.Map;
 public class ThreadReceiver extends Thread{
 	
 	private BufferedReader socIn;
-	private String pseudoDest;
 	
 	ThreadReceiver(BufferedReader s) {
 		this.socIn = s;
@@ -26,13 +25,13 @@ public class ThreadReceiver extends Thread{
 	  	  try {
 	  		
 			while (true) {
-			pseudoDest=EchoClient.pseudoDestinataire;
 			  if(EchoClient.messagesReceived==true) {
-				  HashMap<Integer,String> map = EchoClient.messagesRecus.get(pseudoDest);
+				  HashMap<Integer,String> map = EchoClient.messagesRecus.get(EchoClient.pseudoDestinataire);
+				  
 				  Iterator iterator = map.entrySet().iterator();
 			        while (iterator.hasNext()) {
 			          Map.Entry mapentry = (Map.Entry) iterator.next();
-			          System.out.println("From "+pseudoDest + ": " + mapentry.getValue());
+			          System.out.println("From "+EchoClient.pseudoDestinataire + ": " + mapentry.getValue());
 			        } 
 			        EchoClient.messagesReceived=false; 
 			  }else {
@@ -42,7 +41,7 @@ public class ThreadReceiver extends Thread{
 				  if(line.equals("Exit")) {
 					  
 				  }
-				  System.out.println("From " + pseudoDest +": " + line);
+				  System.out.println("From " + EchoClient.pseudoDestinataire +": " + line);
 			  }
 			  
 			  
@@ -52,13 +51,6 @@ public class ThreadReceiver extends Thread{
 	      }
 	}
 
-	public String getPseudoDest() {
-		return pseudoDest;
-	}
-
-	public void setPseudoDest(String pseudoDest) {
-		this.pseudoDest = pseudoDest;
-	}
 	
 
 }
