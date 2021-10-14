@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import java.awt.Color;
 import java.awt.Dimension;
 
+//Conteneur pour afficher la liste de tous les contacts de l'utilisateur
+
 public class ContactPanel extends JPanel {
 	private Fenetre fenetre;
 	ContactListener listener;
@@ -24,23 +26,28 @@ public class ContactPanel extends JPanel {
 	public List<JLabel> getListeLabels() {
 		return listeLabels;
 	}
-
+	
+	public void addContact(String nomContact){
+		listeContacts.add(nomContact);
+		JLabel label = new JLabel(nomContact);
+		label.setOpaque(true);
+		label.setBackground(null);
+		label.addMouseListener(listener);  //Rend les labels cliquables
+		listeLabels.add(label);
+	}
+	
 	private void setListesTest(){
 		for(int i=0;i<50;i++){
 			String text ="Contact "+i;
-			listeContacts.add(text);
-			JLabel label = new JLabel(text);
-			label.setOpaque(true);
-			label.setBackground(null);
-			label.addMouseListener(listener);
-			listeLabels.add(label);
+			addContact(text);
 		}
 	}
 //
 	public void afficherContacts() {
+		this.removeAll();
 		setListesTest();
 		for(JLabel label : listeLabels) {
-			preferredVerticalSize+=21;
+			preferredVerticalSize+=21;  //On ajuste la taille du conteneur en fonction du nombre de contact
 			this.add(label);
 		}
 		this.setPreferredSize(new Dimension(100,preferredVerticalSize));

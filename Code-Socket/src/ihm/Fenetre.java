@@ -9,11 +9,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+//Fenêtre principale de l'application
+
 public class Fenetre extends JFrame{
 	
 	private ConversationPanel convPanel = new ConversationPanel();
 	private JTextField messageField = new JTextField(20);
 	private JButton sendButton = new JButton("SEND");
+	private JButton addContactButton = new JButton("+ New Contact");
 	private JPanel panelWriteMessage = new JPanel();
 	private ContactPanel contactPanel = new ContactPanel(this);
 	
@@ -21,7 +24,7 @@ public class Fenetre extends JFrame{
 	
 	public Fenetre() {
 		this.setTitle("Application Chat");
-		this.setSize(700,700);
+		this.setSize(800,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
@@ -32,6 +35,10 @@ public class Fenetre extends JFrame{
 		this.setVisible(true);
 	}
 	
+	public JButton getAddContactButton() {
+		return addContactButton;
+	}
+
 	public JTextField getMessageField() {
 		return messageField;
 	}
@@ -61,8 +68,9 @@ public class Fenetre extends JFrame{
 
 	private void placerMessageField() {
 		messageField.setFont(new Font("Sherif",Font.PLAIN,30));
+		panelWriteMessage.add(addContactButton);
 		panelWriteMessage.add(messageField);
-		panelWriteMessage.add(sendButton,BorderLayout.EAST);
+		panelWriteMessage.add(sendButton);
 		sendButton.addActionListener(new SendListener(this));
 		this.add(panelWriteMessage,BorderLayout.SOUTH);
 	}

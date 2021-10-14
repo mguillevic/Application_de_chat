@@ -4,7 +4,7 @@ public class mainTest {
 
 	public static void main(String[] args) {
 		
-		Fenetre f = new Fenetre();
+		FenetreConnexion f = new FenetreConnexion();
 		//~ f.getConvPanel().setListeMessages(messages);
 	}
 }

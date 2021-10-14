@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.swing.JTextArea;
 
+//Conteneur pour afficher les conversations des utilisateurs
+
 public class ConversationPanel extends JTextArea {
 	private List<String> listeMessages;
 	private int textSize=20;
