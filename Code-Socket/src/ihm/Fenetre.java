@@ -47,9 +47,10 @@ public class Fenetre extends JFrame{
 	}
 	
 	private void placerContactPanel() {
-		contactPanel.setPreferredSize(new Dimension(100,getHeight()));
 		contactPanel.afficherContacts();
-		this.add(contactPanel,BorderLayout.WEST);
+		JScrollPane scroll = new JScrollPane(contactPanel);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.add(scroll,BorderLayout.WEST);
 	}
 	
 	public ConversationPanel getConvPanel() {

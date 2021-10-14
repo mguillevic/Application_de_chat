@@ -6,17 +6,19 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 public class ContactPanel extends JPanel {
 	private List<String> listeContacts = new LinkedList<String>();
 	private List<JLabel> listeLabels = new LinkedList<JLabel>();
+	private int preferredVerticalSize;
 	
 	public ContactPanel(){
 		setBackground(Color.WHITE);
 	}
 	
 	private void setListeTest(){
-		for(int i=0;i<5;i++){
+		for(int i=0;i<50;i++){
 			listeContacts.add("Contact "+i);
 		}
 	}
@@ -25,10 +27,10 @@ public class ContactPanel extends JPanel {
 		int y=20;
 		for(String contact : listeContacts) {
 			JLabel label = new JLabel(contact);
-			label.setBounds(0,y,50,20);
-			y+=30;
 			listeLabels.add(label);
+			preferredVerticalSize+=21;
 			this.add(label);
 		}
+		this.setPreferredSize(new Dimension(100,preferredVerticalSize));
 	}
 }
