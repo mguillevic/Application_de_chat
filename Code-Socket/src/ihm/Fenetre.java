@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JFrame;
@@ -34,7 +35,6 @@ public class Fenetre extends JFrame{
 		
 		JScrollPane scroll = new JScrollPane(convPanel);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		convPanel.setBounds(50,50,getWidth()-50,getHeight()-100);
 		this.add(scroll);
 	}
 	
@@ -47,9 +47,9 @@ public class Fenetre extends JFrame{
 	}
 	
 	private void placerContactPanel() {
-		contactPanel.setBounds(0,0,100,getHeight());
+		contactPanel.setPreferredSize(new Dimension(100,getHeight()));
 		contactPanel.afficherContacts();
-		this.add(contactPanel);
+		this.add(contactPanel,BorderLayout.WEST);
 	}
 	
 	public ConversationPanel getConvPanel() {

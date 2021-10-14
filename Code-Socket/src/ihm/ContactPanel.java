@@ -5,9 +5,15 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 
+import java.awt.Color;
+
 public class ContactPanel extends JPanel {
 	private List<String> listeContacts = new LinkedList<String>();
 	private List<JLabel> listeLabels = new LinkedList<JLabel>();
+	
+	public ContactPanel(){
+		setBackground(Color.WHITE);
+	}
 	
 	private void setListeTest(){
 		for(int i=0;i<5;i++){
