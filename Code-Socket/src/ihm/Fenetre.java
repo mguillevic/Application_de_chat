@@ -15,8 +15,9 @@ public class Fenetre extends JFrame{
 	private JTextField messageField = new JTextField(20);
 	private JButton sendButton = new JButton("SEND");
 	private JPanel panelWriteMessage = new JPanel();
+	private ContactPanel contactPanel = new ContactPanel(this);
 	
-	private ContactPanel contactPanel = new ContactPanel();
+	private String currentContact="";
 	
 	public Fenetre() {
 		this.setTitle("Application Chat");
@@ -29,13 +30,6 @@ public class Fenetre extends JFrame{
 		this.placerConversationPanel();
 		
 		this.setVisible(true);
-	}
-	
-	private void placerConversationPanel() {
-		
-		JScrollPane scroll = new JScrollPane(convPanel);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		this.add(scroll);
 	}
 	
 	public JTextField getMessageField() {
@@ -52,6 +46,17 @@ public class Fenetre extends JFrame{
 
 	public ContactPanel getContactPanel() {
 		return contactPanel;
+	}
+	
+	private void placerConversationPanel() {
+		
+		JScrollPane scroll = new JScrollPane(convPanel);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.add(scroll);
+	}
+
+	public String getCurrentContact() {
+		return currentContact;
 	}
 
 	private void placerMessageField() {
@@ -71,5 +76,9 @@ public class Fenetre extends JFrame{
 	
 	public ConversationPanel getConvPanel() {
 		return this.convPanel;
+	}
+
+	public void setCurrentContact(String text) {
+		currentContact = text;
 	}
 }

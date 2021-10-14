@@ -9,11 +9,15 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 public class ContactPanel extends JPanel {
+	private Fenetre fenetre;
+	ContactListener listener;
 	private List<String> listeContacts = new LinkedList<String>();
 	private List<JLabel> listeLabels = new LinkedList<JLabel>();
 	private int preferredVerticalSize;
 	
-	public ContactPanel(){
+	public ContactPanel(Fenetre f){
+		fenetre=f;
+		listener = new ContactListener(fenetre);
 		setBackground(Color.WHITE);
 	}
 	
@@ -21,20 +25,21 @@ public class ContactPanel extends JPanel {
 		return listeLabels;
 	}
 
-	private void setListeTest(){
+	private void setListesTest(){
 		for(int i=0;i<50;i++){
-			listeContacts.add("Contact "+i);
+			String text ="Contact "+i;
+			listeContacts.add(text);
+			JLabel label = new JLabel(text);
+			label.setOpaque(true);
+			label.setBackground(null);
+			label.addMouseListener(listener);
+			listeLabels.add(label);
 		}
 	}
 //
 	public void afficherContacts() {
-		setListeTest();
-		int y=20;
-		//SendListener listener = new SendListener
-		for(String contact : listeContacts) {
-			JLabel label = new JLabel(contact);
-			listeLabels.add(label);
-			//label.add(
+		setListesTest();
+		for(JLabel label : listeLabels) {
 			preferredVerticalSize+=21;
 			this.add(label);
 		}
