@@ -26,7 +26,7 @@ public class ContactPanel extends JPanel {
 			listeContacts.add("Contact "+i);
 		}
 	}
-
+//
 	public void afficherContacts() {
 		setListeTest();
 		int y=20;

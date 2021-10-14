@@ -24,4 +24,4 @@ public class SendListener implements ActionListener{
 			fenetre.getConvPanel().append("Pseudo: "+clickedLabel.getText()+"\n\n");
 		}
 	}
-}
+}//

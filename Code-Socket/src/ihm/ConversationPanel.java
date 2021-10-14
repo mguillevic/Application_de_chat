@@ -25,4 +25,4 @@ public class ConversationPanel extends JTextArea {
 		this.listeMessages=uneListe;
 	}
 	
-}
+}//

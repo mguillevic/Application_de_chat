@@ -45,7 +45,7 @@ public class Fenetre extends JFrame{
 	public JButton getSendButton() {
 		return sendButton;
 	}
-
+//
 	public JPanel getPanelWriteMessage() {
 		return panelWriteMessage;
 	}

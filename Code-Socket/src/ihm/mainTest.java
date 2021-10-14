@@ -8,3 +8,4 @@ public class mainTest {
 		//~ f.getConvPanel().setListeMessages(messages);
 	}
 }
+//
