@@ -28,22 +28,31 @@ public class ClientThread
 		this.clientSocket = s;
 	}
 	
+	//Ajout de la socket client dans le catalogue du serveurs
 	public boolean pseudoExiste(String pseudo){
 		
+		//Si le client n'est pas déja un client, on l'ajoute
 		if (!EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudo)){
+			
+			//Ajout du client et de sa socket dans le catalogue et précise qu'il est connecté
 			EchoServerMultiThreaded.cataloguePseudo.put(pseudo,"true");
 			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
 			ajouterClientAuCatalogue();
 			return true;
+			
 		}else if(EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudo)){
+			
+			//Ajout de la socket dans le catalogue et précise que le client est connecté
 			EchoServerMultiThreaded.cataloguePseudo.replace(pseudo,"true");
 			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
 			return true;
+			
 		}else{
 			return false;
 		}
 	}
 	
+	//Connexion au serveur
 	public boolean connexion() {
 		boolean connexion = false;
 		try {
@@ -51,16 +60,25 @@ public class ClientThread
     		socIn = new BufferedReader(
     			new InputStreamReader(clientSocket.getInputStream()));    
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
+    		
+    		//Reception du pseudo envoyé par le client
 			String line = socIn.readLine();
 			pseudo = line;
+			
+			//Ajout de la socket client dans les catalogues du serveurs
 			connexion = pseudoExiste(pseudo);
+			
+			//Envoie de la reponse au client
 			socOut.println(connexion);
+			
 		}catch(IOException ex) {
 			System.err.println("Error in ConnexionThread: "+ex);
 		}
 		return connexion;
 	}
 	
+	
+	//Verfie si le destinataire existe dans le catalogue du serveur
 	public boolean pseudoDestinataire() {
 		boolean pseudoExiste=false;
 		try {
@@ -68,10 +86,14 @@ public class ClientThread
     		socIn = new BufferedReader(
     			new InputStreamReader(clientSocket.getInputStream()));    
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
+    		
+    		//Reception du pseudo du destinataire
     		pseudoDestinataire = socIn.readLine();
     		
-    		//Regarde si l'amis existe
+    		//Regarde si l'amis existe dans le catalogue du serveur
     		pseudoExiste= EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudoDestinataire);	
+    		
+    		//Envoie de la reponse : existence du pseudo ou non
     		socOut.println(pseudoExiste);
     		
 		}catch(IOException ex) {
@@ -83,6 +105,8 @@ public class ClientThread
 
 	}
 	
+	
+	//Persistence du client dans le catalogue du serveur lors de la connexion
 	public void ajouterClientAuCatalogue() {
 		String fileName = "../../../res/"+"catalogue.txt";
 		try {
@@ -105,10 +129,12 @@ public class ClientThread
     		  connexion = connexion();
     		}
     		
+    		//Phase de selection du destinataire
     		boolean pseudoTrouve = false;
         	while (!pseudoTrouve) {
         		pseudoTrouve = pseudoDestinataire();
           	}
+        	
         	
         	//Regarde si le destinataire est connecté
         	Socket clientSocketDestinataire = null;
@@ -116,15 +142,12 @@ public class ClientThread
         		clientSocketDestinataire = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
         		
         	}
-    		System.out.println(pseudo);
-        	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire,pseudo);
-        	conversation.start();
-        		
-    		//Phase de l'envoi ou la reception du message
+        	
+        	//On précise que le client parle au destinataire choisi et pas un autre
+			EchoServerMultiThreaded.conversations.put(pseudo,pseudoDestinataire);
     		
-    		/*//Phase de choix de la conversation
-    		ListenThread lt = new ListenThread(clientSocket);
-    		lt.start();*/
+        	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire,pseudo,pseudoDestinataire);
+        	conversation.start();
     		
     	} catch (Exception e) {
         	System.err.println("Error in EchoServer:" + e); 

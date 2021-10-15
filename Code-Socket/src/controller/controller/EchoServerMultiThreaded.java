@@ -39,7 +39,8 @@ public class EchoServerMultiThreaded  {
 		
 	}
 	
-
+	
+	//Recuperation des clients persisté dans le catalogue du serveur
 	public void recupererClients()throws IOException{
 		BufferedReader lecteur = null;
 		String file ="../../../res/catalogue.txt";

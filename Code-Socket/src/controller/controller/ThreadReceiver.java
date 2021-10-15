@@ -25,25 +25,11 @@ public class ThreadReceiver extends Thread{
 	  	  try {
 	  		
 			while (true) {
-			  if(EchoClient.messagesReceived==true) {
-				  HashMap<Integer,String> map = EchoClient.messagesRecus.get(EchoClient.pseudoDestinataire);
-				  
-				  Iterator iterator = map.entrySet().iterator();
-			        while (iterator.hasNext()) {
-			          Map.Entry mapentry = (Map.Entry) iterator.next();
-			          System.out.println("From "+EchoClient.pseudoDestinataire + ": " + mapentry.getValue());
-			        } 
-			        EchoClient.messagesReceived=false; 
-			  }else {
-				  String line = socIn.readLine();
-				  
-				  //Affiche le message recu
-				  if(line.equals("Exit")) {
-					  
-				  }
-				  System.out.println("From " + EchoClient.pseudoDestinataire +": " + line);
-			  }
 			  
+				  //Affichage du message recu
+				  String line = socIn.readLine();
+				  System.out.println("From " + EchoClient.pseudoDestinataire +": " + line);
+
 			  
 			}
 	  	} catch (Exception e) {

@@ -28,14 +28,18 @@ public class EchoClient {
 	private String portServer;
 	public static String pseudo;
 	public static String pseudoDestinataire;
-	public static boolean messagesReceived;
-	public static HashMap<String,HashMap<Integer,String>> messagesRecus;
 	public static List<String> amis;
+	
+	
+	public static HashMap<String,String> messagesReceived; //Precise si le client a recu des messages de ses amis
+	public static HashMap<String,HashMap<Integer,String>> messagesRecus;//Stockage des messages recu des amis
+	
 	
 	public EchoClient() throws IOException {
 		ipServer = "127.0.0.1";
 		portServer = "1234";
 		messagesRecus = new HashMap<String,HashMap<Integer,String>>();
+		messagesReceived = new HashMap<String,String>();
 		amis = new ArrayList<String>();
 		
 		try {
@@ -58,7 +62,7 @@ public class EchoClient {
 		
 	}
 	
-	
+	//Connection au serveur avec un pseudo
 	public boolean connexion(String pseudo) throws IOException {
 		socOut.println(pseudo); 
 		String connexion=socIn.readLine();
@@ -70,6 +74,8 @@ public class EchoClient {
 		return connection;
 	}
 	
+	
+	//Choix de l'amis destinataire au près du serveur
 	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
 		//Envoi au serveur
     	socOut.println(pseudoAmis);
@@ -80,22 +86,86 @@ public class EchoClient {
     	return reponseServeur;
 	}
 	
-	public boolean recupererMessagesRecus(String pseudoDest)throws IOException {
+	
+	//Récuperation des amis du client
+	public void recupererPseudosAmis() throws IOException{
+		BufferedReader lecteur = null;
+		String file = "../../../res/"+pseudo + "Amis.txt";
+	    String ligne;
+
+	    try{
+	    	lecteur = new BufferedReader(new FileReader(file));
+	    	while ((ligne = lecteur.readLine()) != null) {
+	    		
+	    		//Ajout des pseudos dans les hashmap et liste
+	  	      	amis.add(ligne);
+	  	      	messagesRecus.put(ligne, null);
+	  	      	messagesReceived.put(ligne, "false");
+	    	}
+	  	    lecteur.close();
+	    }catch(FileNotFoundException exc){
+	    	  System.out.println("Erreur d'ouverture");
+	    } 
+	  
+	}
+	
+	//Ajoute l'ami aux listes et les hashMap si le client n'est pas déja son ami. Fait une sauvegarde de cet amis
+	public static boolean ajouterAmis(String pseudo) {
+		if(!chercherDansMesAmis(pseudo)) {
+			amis.add(pseudo);
+			messagesRecus.put(pseudo,null);
+			messagesReceived.put(pseudo, "false");
+			sauvegarderAmis(pseudo);
+			return true;
+		}
+		return false;
+	}
+	
+	//Recherche dans les amis actuels du client
+	public static boolean chercherDansMesAmis(String pseudo) {
+		for(String s : amis) {
+			if(s.equals(pseudo)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//Persiste les amis du client dans un fichier
+	public static void sauvegarderAmis(String pseudoAmis) {
+		String fileName = "../../../res/"+pseudo+"Amis.txt";
+		try {
+			FileWriter writer = new FileWriter(fileName,true);
+			String ami = pseudoAmis;
+			writer.write(ami+"\r\n");
+			writer.close();
+		}
+		catch(IOException ioe){
+			 System.err.println(ioe.getMessage());
+		}
+	}
+	
+	
+	//Recuperation des message envoyés par l'ami avec le pseudoDest
+	public static void recupererMessagesRecus(String pseudoDest)throws IOException {
 		BufferedReader lecteur = null;
 		String file ="../../../res/"+ pseudo + "MessagesRecus.txt";
 		List<String> messages = null;
 	    String ligne;
 	   
-	    
+	    //Verifie que le pseudoDest correspond à un amis du client
 	    if(messagesRecus.containsKey(pseudoDest)) {
 	    	messagesRecus.replace(pseudoDest,new HashMap<Integer,String>());
+	    	
 	    	try{
 		    	lecteur = new BufferedReader(new FileReader(file));
 		    	int i=0;
 		    	while ((ligne = lecteur.readLine()) != null) {
 		  	      	String [] reponses = ligne.split(";");
+		  	      	
+		  	      	//Si le client a reçu des messages de cet amis on place les messages dans messagesRecus et on indique qu'il en a reçu dans messagesReceived
 		  	      	if(reponses[0].equals(pseudoDest)){
-		  	      		messagesReceived=true;
+		  	      		messagesReceived.replace(pseudoDest,"true");
 		  	      		messagesRecus.get(pseudoDest).put(i,reponses[1]);
 		  	      		i++;
 		  	      	}
@@ -106,57 +176,17 @@ public class EchoClient {
 		    	  System.out.println("Erreur d'ouverture");
 		    } 
 	    }
-	    return messagesReceived;
+	    
 	}
 	
+	
+	//Lancement des thread sender et receiver lors du commencement de la première conversation
 	public void commencerConversation(String pseudoDest)throws IOException  {
 		ts.start();
 		tr.start();
-	}
-	
-	public boolean terminerConv() {
-		if(ts.getMessage().equals("Exit")) {
-			System.out.println("aaaa");
-			return true;
-		}
-		return false;
-	}
-	
-	public void recupererPseudosAmis() throws IOException{
-		BufferedReader lecteur = null;
-		String file = "../../../res/"+pseudo + "Amis.txt";
-	    String ligne;
+	}	
 
-	    try{
-	    	lecteur = new BufferedReader(new FileReader(file));
-	    	while ((ligne = lecteur.readLine()) != null) {
-	  	      	amis.add(ligne);
-	  	      	messagesRecus.put(ligne, null);
-	    	}
-	  	    lecteur.close();
-	    }catch(FileNotFoundException exc){
-	    	  System.out.println("Erreur d'ouverture");
-	    } 
-	  
-	}
-	
-	public static void setPseudoDest(String pseudoDest) {
-		pseudoDestinataire=pseudoDest;
-	}
-	
-	public void ajouterAmis(String pseudo) {
-		amis.add(pseudo);
-	}
-	
-	public boolean chercherDansMesAmis(String pseudo) {
-		for(String s : amis) {
-			if(s.equals(pseudo)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+	//A la deconnexion on ferme les flux
 	public void endEchoClient() throws IOException {
 		socOut.close();
         socIn.close();

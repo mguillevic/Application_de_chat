@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ThreadSender extends Thread{
 	
@@ -25,16 +28,53 @@ public class ThreadSender extends Thread{
 	public void run() {
 	  	  try {
 	  		
-			while (true) {
+			while (true) {			
 				
+				//Demande au client s'il veut changer de destinataire
 				System.out.println("Voulez-vous changer de destinataire ? Oui/Non");
 				String reponse = stdIn.readLine();
+				
 				if(reponse.equals("Oui")) {
+					
+					//Changement du pseudo du destinataire
 					System.out.println("Rentrer le pseudo : ");
 					EchoClient.pseudoDestinataire = stdIn.readLine();
 					message=reponse+";"+EchoClient.pseudoDestinataire;
+					
+					//Ajout de l'amis s'ils ne sont pas déja amis
+					EchoClient.ajouterAmis(EchoClient.pseudoDestinataire));
+					
+					//Recuperation des messages recus
+					EchoClient.recupererMessagesRecus(EchoClient.pseudoDestinataire);
+					
+					//Si le client a recu des messages de la part de son amis on les affiche
+					if(EchoClient.messagesReceived.get(EchoClient.pseudoDestinataire).equals("true")) {
+						  HashMap<Integer,String> map = EchoClient.messagesRecus.get(EchoClient.pseudoDestinataire);
+						  Iterator iterator = map.entrySet().iterator();
+					        while (iterator.hasNext()) {
+					          Map.Entry mapentry = (Map.Entry) iterator.next();
+					          System.out.println("From "+EchoClient.pseudoDestinataire + ": " + mapentry.getValue());
+					        } 
+					        EchoClient.messagesReceived.replace(EchoClient.pseudoDestinataire, "false"); 
+					}
 						
 				}else {
+					
+					//Recuperation des messages recus
+					EchoClient.recupererMessagesRecus(EchoClient.pseudoDestinataire);
+					
+					//Si le client a recu des messages de la part de son amis on les affiche
+					if(EchoClient.messagesReceived.get(EchoClient.pseudoDestinataire).equals("true")) {
+						  HashMap<Integer,String> map = EchoClient.messagesRecus.get(EchoClient.pseudoDestinataire);
+						  Iterator iterator = map.entrySet().iterator();
+					        while (iterator.hasNext()) {
+					          Map.Entry mapentry = (Map.Entry) iterator.next();
+					          System.out.println("From "+EchoClient.pseudoDestinataire + ": " + mapentry.getValue());
+					        } 
+					        EchoClient.messagesReceived.replace(EchoClient.pseudoDestinataire, "false"); 
+					}
+					
+					//Envoi du message
 					System.out.println("To "+EchoClient.pseudoDestinataire+": ");
 					String messageSent = stdIn.readLine();
 					message=reponse+";"+messageSent;

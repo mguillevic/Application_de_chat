@@ -33,9 +33,7 @@ public class Service {
 	}
 	
 	public void ajouterAmis(String pseudo) {
-		if(!echoClient.chercherDansMesAmis(pseudo)) {
-			echoClient.ajouterAmis(pseudo);
-		}
+		echoClient.ajouterAmis(pseudo));
 	}
 	
 	public void commencerConversation(String pseudoDest)throws IOException  {
