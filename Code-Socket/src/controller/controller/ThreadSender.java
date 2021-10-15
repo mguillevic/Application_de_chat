@@ -7,13 +7,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ThreadSender extends Thread{
 	
 	private PrintStream socOut;
-	private String pseudoDest;
-	public static String message;
 	private BufferedReader stdIn;
+	private String message;
 	
 	ThreadSender(PrintStream s) {
 		this.socOut = s;
@@ -21,44 +23,63 @@ public class ThreadSender extends Thread{
 		message="";
 	}
 	
-	public void sauvegarderMessage(String message) {
-		String fileName = "../../../res/"+pseudoDest+"MessagesRecus.txt";
-		try {
-			FileWriter writer = new FileWriter(fileName,true);
-			String messageSent = EchoClient.pseudo+";"+message;
-			writer.write(messageSent+"\r\n");
-			writer.close();
-		}
-		catch(IOException ioe){
-			 System.err.println(ioe.getMessage());
-		}
-	}
+	
 	
 	public void run() {
 	  	  try {
 	  		
-			while (true) {
-				pseudoDest=EchoClient.pseudoDestinataire;
-				if(EchoClient.amisConnecte.get(pseudoDest).equals("false")) {
-					
-				}else {
-					System.out.println("Voulez-vous changer de destinataire ? Oui/Non");
-					String reponse = stdIn.readLine();
-					if(reponse.equals("Oui")) {
-						System.out.println("Rentrer le pseudo : ");
-						pseudoDest = stdIn.readLine();
-						message=reponse+";"+pseudoDest;
-						EchoClient.setPseudoDest(pseudoDest);
-						
-					}else {
-						System.out.println("To "+pseudoDest+": ");
-						String messageSent = stdIn.readLine();
-						message=reponse+";"+messageSent;
-						sauvegarderMessage(messageSent);
-					}
-	        		socOut.println(message);
-				}
+			while (true) {			
 				
+				//Demande au client s'il veut changer de destinataire
+				System.out.println("Voulez-vous changer de destinataire ? Oui/Non");
+				String reponse = stdIn.readLine();
+				
+				if(reponse.equals("Oui")) {
+					
+					//Changement du pseudo du destinataire
+					System.out.println("Rentrer le pseudo : ");
+					EchoClient.pseudoDestinataire = stdIn.readLine();
+					message=reponse+";"+EchoClient.pseudoDestinataire;
+					
+					//Ajout de l'amis s'ils ne sont pas déja amis
+					EchoClient.ajouterAmis(EchoClient.pseudoDestinataire));
+					
+					//Recuperation des messages recus
+					EchoClient.recupererMessagesRecus(EchoClient.pseudoDestinataire);
+					
+					//Si le client a recu des messages de la part de son amis on les affiche
+					if(EchoClient.messagesReceived.get(EchoClient.pseudoDestinataire).equals("true")) {
+						  HashMap<Integer,String> map = EchoClient.messagesRecus.get(EchoClient.pseudoDestinataire);
+						  Iterator iterator = map.entrySet().iterator();
+					        while (iterator.hasNext()) {
+					          Map.Entry mapentry = (Map.Entry) iterator.next();
+					          System.out.println("From "+EchoClient.pseudoDestinataire + ": " + mapentry.getValue());
+					        } 
+					        EchoClient.messagesReceived.replace(EchoClient.pseudoDestinataire, "false"); 
+					}
+						
+				}else {
+					
+					//Recuperation des messages recus
+					EchoClient.recupererMessagesRecus(EchoClient.pseudoDestinataire);
+					
+					//Si le client a recu des messages de la part de son amis on les affiche
+					if(EchoClient.messagesReceived.get(EchoClient.pseudoDestinataire).equals("true")) {
+						  HashMap<Integer,String> map = EchoClient.messagesRecus.get(EchoClient.pseudoDestinataire);
+						  Iterator iterator = map.entrySet().iterator();
+					        while (iterator.hasNext()) {
+					          Map.Entry mapentry = (Map.Entry) iterator.next();
+					          System.out.println("From "+EchoClient.pseudoDestinataire + ": " + mapentry.getValue());
+					        } 
+					        EchoClient.messagesReceived.replace(EchoClient.pseudoDestinataire, "false"); 
+					}
+					
+					//Envoi du message
+					System.out.println("To "+EchoClient.pseudoDestinataire+": ");
+					String messageSent = stdIn.readLine();
+					message=reponse+";"+messageSent;
+				}
+				socOut.println(message);
 
 			}
 	  	} catch (Exception e) {
@@ -67,13 +88,6 @@ public class ThreadSender extends Thread{
 	}
 
 	
-	public String getPseudoDest() {
-		return pseudoDest;
-	}
-
-	public void setPseudoDest(String pseudoDest) {
-		this.pseudoDest = pseudoDest;
-	}
 
 	public String getMessage() {
 		return message;

@@ -21,38 +21,41 @@ public class EchoServerMultiThreaded  {
   	* 
   	**/
 	
-	public static String ipServer;
-	public static String portServer;
+	private String ipServer;
+	private String portServer;
 	
-	public static HashMap<String,String> catalogueIP;
+	
 	public static HashMap<String,Socket> catalogueSocket;
 	public static HashMap<String,String> cataloguePseudo;
+	public static HashMap<String,String> conversations;
 	
 	public EchoServerMultiThreaded() throws IOException{
-		catalogueIP = new HashMap<String,String>();
+		cataloguePseudo = new HashMap<String,String>();
+		recupererClients();
 		catalogueSocket = new HashMap<String,Socket>();
+		conversations= new HashMap<String,String>();
 		ipServer = InetAddress.getLocalHost().getHostAddress();
 		portServer = "1234";
-		cataloguePseudo = recupererClients();
+		
 	}
 	
-
-	public HashMap<String,String> recupererClients()throws IOException{
+	
+	//Recuperation des clients persisté dans le catalogue du serveur
+	public void recupererClients()throws IOException{
 		BufferedReader lecteur = null;
 		String file ="../../../res/catalogue.txt";
-		HashMap<String,String> clients = new HashMap<String,String>();
 	    String ligne;
 	    try{
 	    	lecteur = new BufferedReader(new FileReader(file));
 	    	while ((ligne = lecteur.readLine()) != null) {
-	  	      	clients.put(ligne,"false");
+	    		cataloguePseudo.put(ligne,"false");
 	    	}
 	  	    lecteur.close();
 	    }catch(FileNotFoundException exc){
 	    	  System.out.println("Erreur d'ouverture");
 	    } 
-	    return clients;
 	}
+	
 	
     public static void main(String args[]) throws IOException{ 
 	   EchoServerMultiThreaded server = new EchoServerMultiThreaded();

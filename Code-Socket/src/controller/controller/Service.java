@@ -24,12 +24,16 @@ public class Service {
 		echoClient.recupererPseudosAmis();
 	}
 	
-	public String selectionnerAmis(String pseudoAmis)throws IOException  {
+	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
 		return echoClient.selectionnerAmis(pseudoAmis);
 	}
 	
 	public void recupererMessagesRecu(String pseudoDest)throws IOException {
 		echoClient.recupererMessagesRecus(pseudoDest);
+	}
+	
+	public void ajouterAmis(String pseudo) {
+		echoClient.ajouterAmis(pseudo));
 	}
 	
 	public void commencerConversation(String pseudoDest)throws IOException  {

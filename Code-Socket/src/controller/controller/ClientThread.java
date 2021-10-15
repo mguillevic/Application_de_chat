@@ -20,31 +20,39 @@ public class ClientThread
 	
 	private Socket clientSocket;
 	private Boolean connexion = false;
-	public String pseudoDestinataire="";
+	public static String pseudoDestinataire="";
+	public static String pseudo="";
 	
 	
 	ClientThread(Socket s) {
 		this.clientSocket = s;
 	}
 	
-	public boolean pseudoExiste(String pseudo, String ip){
-		HashMap<String, String> catalogueIP = EchoServerMultiThreaded.catalogueIP;
-		HashMap<String, Socket> catalogueSocket = EchoServerMultiThreaded.catalogueSocket;
-		HashMap<String, String> cataloguePseudos = EchoServerMultiThreaded.cataloguePseudo;
+	//Ajout de la socket client dans le catalogue du serveurs
+	public boolean pseudoExiste(String pseudo){
 		
-		if (!catalogueIP.containsKey(pseudo)){
-			catalogueIP.put(pseudo,ip);
-			cataloguePseudos.put(pseudo, "true");
-			catalogueSocket.put(pseudo, clientSocket);
+		//Si le client n'est pas déja un client, on l'ajoute
+		if (!EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudo)){
+			
+			//Ajout du client et de sa socket dans le catalogue et précise qu'il est connecté
+			EchoServerMultiThreaded.cataloguePseudo.put(pseudo,"true");
+			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
+			ajouterClientAuCatalogue();
 			return true;
-		}else if(catalogueIP.containsKey(pseudo) && ip.equals(catalogueIP.get(pseudo))){
-			cataloguePseudos.replace(pseudo,"true");
+			
+		}else if(EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudo)){
+			
+			//Ajout de la socket dans le catalogue et précise que le client est connecté
+			EchoServerMultiThreaded.cataloguePseudo.replace(pseudo,"true");
+			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
 			return true;
+			
 		}else{
 			return false;
 		}
 	}
 	
+	//Connexion au serveur
 	public boolean connexion() {
 		boolean connexion = false;
 		try {
@@ -52,51 +60,64 @@ public class ClientThread
     		socIn = new BufferedReader(
     			new InputStreamReader(clientSocket.getInputStream()));    
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
-			String[] line = socIn.readLine().split(";");
-			String pseudo = line[0];
-			String ip = line[1];
-			connexion = pseudoExiste(pseudo,ip);
+    		
+    		//Reception du pseudo envoyé par le client
+			String line = socIn.readLine();
+			pseudo = line;
+			
+			//Ajout de la socket client dans les catalogues du serveurs
+			connexion = pseudoExiste(pseudo);
+			
+			//Envoie de la reponse au client
 			socOut.println(connexion);
+			
 		}catch(IOException ex) {
 			System.err.println("Error in ConnexionThread: "+ex);
 		}
 		return connexion;
 	}
 	
-	public String pseudoDestinataire() {
-		String pseudoConnecte="false";
+	
+	//Verfie si le destinataire existe dans le catalogue du serveur
+	public boolean pseudoDestinataire() {
+		boolean pseudoExiste=false;
 		try {
 			BufferedReader socIn = null;
     		socIn = new BufferedReader(
     			new InputStreamReader(clientSocket.getInputStream()));    
     		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
+    		
+    		//Reception du pseudo du destinataire
     		pseudoDestinataire = socIn.readLine();
     		
-    		//Regarde si l'amis est connecté
-    		pseudoConnecte = String.valueOf(EchoServerMultiThreaded.catalogueIP.containsKey(pseudoDestinataire));
-    		if(pseudoConnecte.equals("true")) {
-    			socOut.println("pseudoConnecte");
-    			pseudoConnecte="pseudoConnecte";
-    			return pseudoConnecte;
-    		}
+    		//Regarde si l'amis existe dans le catalogue du serveur
+    		pseudoExiste= EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudoDestinataire);	
     		
-    		//S'il n'est pas connecté regarde si le pseudo existe
-    		pseudoConnecte = String.valueOf(EchoServerMultiThreaded.catalogueIP.containsKey(pseudoDestinataire));
-    		if(pseudoConnecte.equals("true")) {
-    			socOut.println("pseudoNonConnecte");
-    			pseudoConnecte="pseudoNonConnecte";
-    			return pseudoConnecte;
-    		}
-    		
-    		    		
+    		//Envoie de la reponse : existence du pseudo ou non
+    		socOut.println(pseudoExiste);
     		
 		}catch(IOException ex) {
 			System.err.println("Error in ConnexionThread: "+ex);
 		}
 		
 		//Si le pseudo n'existe pas on renvoie false
-		return pseudoConnecte;
+		return pseudoExiste;
 
+	}
+	
+	
+	//Persistence du client dans le catalogue du serveur lors de la connexion
+	public void ajouterClientAuCatalogue() {
+		String fileName = "../../../res/"+"catalogue.txt";
+		try {
+			FileWriter writer = new FileWriter(fileName,true);
+			String messageSent = pseudo;
+			writer.write(messageSent+"\r\n");
+			writer.close();
+		}
+		catch(IOException ioe){
+			 System.err.println(ioe.getMessage());
+		}
 	}
 	
 	
@@ -108,26 +129,25 @@ public class ClientThread
     		  connexion = connexion();
     		}
     		
+    		//Phase de selection du destinataire
     		boolean pseudoTrouve = false;
-    		String reponse="";
         	while (!pseudoTrouve) {
-        		reponse = pseudoDestinataire();
-        		pseudoTrouve = !reponse.equals("false");
+        		pseudoTrouve = pseudoDestinataire();
           	}
         	
+        	
+        	//Regarde si le destinataire est connecté
         	Socket clientSocketDestinataire = null;
-        	if(reponse.equals("pseudoConnecte")) {
+        	if(EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true")) {
         		clientSocketDestinataire = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
-        	}
-    		
-        	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire);
-        	conversation.start();
         		
-    		//Phase de l'envoi ou la reception du message
+        	}
+        	
+        	//On précise que le client parle au destinataire choisi et pas un autre
+			EchoServerMultiThreaded.conversations.put(pseudo,pseudoDestinataire);
     		
-    		/*//Phase de choix de la conversation
-    		ListenThread lt = new ListenThread(clientSocket);
-    		lt.start();*/
+        	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire,pseudo,pseudoDestinataire);
+        	conversation.start();
     		
     	} catch (Exception e) {
         	System.err.println("Error in EchoServer:" + e); 
