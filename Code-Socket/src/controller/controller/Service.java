@@ -33,16 +33,16 @@ public class Service {
 	}
 	
 	public void ajouterAmis(String pseudo) {
-		echoClient.ajouterAmis(pseudo));
+		echoClient.ajouterAmis(pseudo);
 	}
 	
 	public void commencerConversation(String pseudoDest)throws IOException  {
 		echoClient.commencerConversation(pseudoDest);
 	}
 	
-	public boolean terminerConversation()throws IOException  {
-		return echoClient.terminerConv();
-	}
+	//public boolean terminerConversation()throws IOException  {
+	//	return echoClient.terminerConv();
+	//}
 	
 	public String recupererPseudoClient(String ip) {
 		return null;

@@ -8,16 +8,19 @@ import java.net.MulticastSocket;
 public class MulticastSendThread extends Thread {
 	
 	private MulticastSocket socket;
+	private String pseudoSender;
 	
-	public MulticastSendThread(MulticastSocket socket) {
+	public MulticastSendThread(MulticastSocket socket, String s) {
 		this.socket=socket;
+		this.pseudoSender = s;
 	}
 	
 	public void run() {
 		try{
 			while(true){
 				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-				String input = stdIn.readLine();
+				String input = pseudoSender+": ";
+				input+=stdIn.readLine();
 				byte[] message = (input.getBytes());
 				DatagramPacket packet = new DatagramPacket(message, message.length, 
 		            InetAddress.getByName("228.5.6.7"), 6789);
