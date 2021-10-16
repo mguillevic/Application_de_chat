@@ -9,18 +9,22 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+//Fenêtre principale de l'application
+
 public class Fenetre extends JFrame{
 	
 	private ConversationPanel convPanel = new ConversationPanel();
 	private JTextField messageField = new JTextField(20);
 	private JButton sendButton = new JButton("SEND");
+	private JButton addContactButton = new JButton("+ New Contact");
 	private JPanel panelWriteMessage = new JPanel();
+	private ContactPanel contactPanel = new ContactPanel(this);
 	
-	private ContactPanel contactPanel = new ContactPanel();
+	private String currentContact="";
 	
 	public Fenetre() {
 		this.setTitle("Application Chat");
-		this.setSize(700,700);
+		this.setSize(800,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		
@@ -31,13 +35,10 @@ public class Fenetre extends JFrame{
 		this.setVisible(true);
 	}
 	
-	private void placerConversationPanel() {
-		
-		JScrollPane scroll = new JScrollPane(convPanel);
-        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		this.add(scroll);
+	public JButton getAddContactButton() {
+		return addContactButton;
 	}
-	
+
 	public JTextField getMessageField() {
 		return messageField;
 	}
@@ -53,12 +54,26 @@ public class Fenetre extends JFrame{
 	public ContactPanel getContactPanel() {
 		return contactPanel;
 	}
+	
+	private void placerConversationPanel() {
+		
+		JScrollPane scroll = new JScrollPane(convPanel);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.add(scroll);
+	}
+
+	public String getCurrentContact() {
+		return currentContact;
+	}
 
 	private void placerMessageField() {
+		SendListener listener = new SendListener(this);
 		messageField.setFont(new Font("Sherif",Font.PLAIN,30));
+		panelWriteMessage.add(addContactButton);
+		addContactButton.addActionListener(listener);
 		panelWriteMessage.add(messageField);
-		panelWriteMessage.add(sendButton,BorderLayout.EAST);
-		sendButton.addActionListener(new SendListener(this));
+		panelWriteMessage.add(sendButton);
+		sendButton.addActionListener(listener);
 		this.add(panelWriteMessage,BorderLayout.SOUTH);
 	}
 	
@@ -71,5 +86,9 @@ public class Fenetre extends JFrame{
 	
 	public ConversationPanel getConvPanel() {
 		return this.convPanel;
+	}
+
+	public void setCurrentContact(String text) {
+		currentContact = text;
 	}
 }
