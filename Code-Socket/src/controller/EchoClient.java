@@ -45,8 +45,8 @@ public class EchoClient {
 	public static String nomContactAAjouter;
 	
 	
-	public EchoClient() throws IOException {
-		ipServer = "127.0.0.1";
+	public EchoClient(String ip) throws IOException {
+		ipServer = ip;
 		portServer = "1234";
 		messagesRecus = new HashMap<String,List<String>>();
 		messagesReceived = new HashMap<String,String>();
