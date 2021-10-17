@@ -7,7 +7,11 @@ public class mainTest {
 
 	public static void main(String[] args) throws IOException {
 		
-		FenetreConnexion f = new FenetreConnexion();
+		if (args.length != 1) {
+	          System.out.println("Usage: java EchoClient <EchoServer host>");
+	          System.exit(1);
+	    }
+		FenetreConnexion f = new FenetreConnexion(args[0]);
 		//~ f.getConvPanel().setListeMessages(messages);
 	}
 }

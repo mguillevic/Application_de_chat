@@ -18,7 +18,7 @@ public class FenetreConnexion extends JFrame{
 	private JLabel errorMessage = new JLabel();
 	private EchoClient client;
 	
-	public FenetreConnexion() throws IOException {
+	public FenetreConnexion(String ip) throws IOException {
 		
 		this.setTitle("Connexion");
 		this.setSize(300,300);
@@ -27,7 +27,7 @@ public class FenetreConnexion extends JFrame{
 		this.setLocationRelativeTo(null);
 		this.setLayout(null);
 		
-		client = new EchoClient();
+		client = new EchoClient(ip);
 		
 		
 		placerInputPseudo();
