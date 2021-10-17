@@ -68,10 +68,10 @@ public class EchoServerMultiThreaded  {
 		}*/
 		
 		//Création d'un thread pour se connecter à la conversation de groupe et enregistrer
-		MulticastSocket groupSocket = new MulticastSocket(6789);
+		/*MulticastSocket groupSocket = new MulticastSocket(6789);
 		groupSocket.joinGroup(InetAddress.getByName("228.5.6.7"));
 		GroupSaveThread saveThread = new GroupSaveThread(groupSocket);
-		saveThread.start();
+		saveThread.start();*/
 		try {
 			listenSocket = new ServerSocket(1234); //port
 			System.out.println("Server ready..."); 

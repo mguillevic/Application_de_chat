@@ -42,6 +42,7 @@ public class EchoClient {
 	public static HashMap<String,List<String>> messagesRecus;//Stockage des messages recu des amis
 	public static boolean contactAjoute;
 	public static boolean ajouterContact;
+	public static boolean inGroup;
 	public static String nomContactAAjouter;
 	
 	
@@ -55,6 +56,7 @@ public class EchoClient {
 		changerConv=false;
 		contactAjoute=false;
 		ajouterContact=false;
+		inGroup=false;
 		nomContactAAjouter="";
 		
 		try {
@@ -223,15 +225,16 @@ public class EchoClient {
 		tr.start();
 	}
 	
-	public void recupererConversationGroupe(){
+	public String recupererConversationGroupe(){
 		BufferedReader lecteur = null;
-		String file = "../../../res/GroupConversation.txt";
+		String file = "res/GroupConversation.txt";
 	    String ligne;
+	    String buffer="";
 
 	    try{
 	    	lecteur = new BufferedReader(new FileReader(file));
 	    	while ((ligne = lecteur.readLine()) != null) {
-	    		System.out.print(ligne);
+	    		buffer+=ligne;
 	    	}
 	  	    lecteur.close();
 	    }catch(FileNotFoundException exc){
@@ -239,11 +242,11 @@ public class EchoClient {
 	    }catch(IOException ioe){
 			ioe.printStackTrace();
 		}
+	    return(buffer);
 	}
 	
 	@SuppressWarnings("deprecation")
 	public void rejoindreGroupe() throws IOException {
-		recupererConversationGroupe();
 		groupSocket = new MulticastSocket(6789);
 		groupSocket.joinGroup(InetAddress.getByName("228.5.6.7"));
 		MulticastReceiveThread receiveThread = new MulticastReceiveThread(groupSocket);
@@ -258,6 +261,22 @@ public class EchoClient {
         socIn.close();
         stdIn.close();
         echoSocket.close();
+	}
+
+	public ThreadSender getTs() {
+		return ts;
+	}
+
+	public void setTs(ThreadSender ts) {
+		this.ts = ts;
+	}
+
+	public ThreadReceiver getTr() {
+		return tr;
+	}
+
+	public void setTr(ThreadReceiver tr) {
+		this.tr = tr;
 	}
 	
 	

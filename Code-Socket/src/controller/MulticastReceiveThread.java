@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 
+import ihm.Fenetre;
+
 public class MulticastReceiveThread extends Thread{
 	private MulticastSocket socket;
 	
 	public MulticastReceiveThread(MulticastSocket socket) {
 		this.socket=socket;
 	}
+	
+	
 	public void run() {
 		try{
 			while(true) {
@@ -18,7 +22,12 @@ public class MulticastReceiveThread extends Thread{
 	        
 				// receive the packet
 				socket.receive(packet);
-				System.out.println(new String(packet.getData()));
+				String messageReceived = new String(packet.getData());
+				
+				if(messageReceived!=null && !messageReceived.equals("")) {
+					System.out.println(messageReceived);
+					Fenetre.convPanel.afficherMessageRecu(messageReceived);
+				}
 			}
 		}catch(IOException ex){
 			ex.printStackTrace();

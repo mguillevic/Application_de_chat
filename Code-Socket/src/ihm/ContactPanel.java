@@ -23,25 +23,32 @@ public class ContactPanel extends JPanel {
 	ContactListener listener;
 	private List<String> listeContacts = new LinkedList<String>();
 	private List<JLabel> listeLabels = new LinkedList<JLabel>();
+	private JLabel labelGroupe = new JLabel("Groupe");
 	private int preferredVerticalSize;
 	
 	public ContactPanel(Fenetre f){
 		fenetre=f;
 		listener = new ContactListener(fenetre);
 		setBackground(Color.WHITE);
+		labelGroupe.setOpaque(true);
+		labelGroupe.setBackground(null);
+		labelGroupe.addMouseListener(listener);
+		this.add(labelGroupe);
 	}
 	
 	public List<JLabel> getListeLabels() {
 		return listeLabels;
 	}
 	
-	/*public void ajouterContactListe(String contact) {
-		listeContacts.add(contact);
-		listeLabels.add(new JLabel(contact));
-		this.add(listeLabels.get(listeLabels.size()-1));
-		this.revalidate();
-	}*/
 	
+	public JLabel getLabelGroupe() {
+		return labelGroupe;
+	}
+
+	public void setLabelGroupe(JLabel labelGroupe) {
+		this.labelGroupe = labelGroupe;
+	}
+
 	public boolean isContactInList(String contact) {
 		for(String s : listeContacts) {
 			if(s.equals(contact)) {

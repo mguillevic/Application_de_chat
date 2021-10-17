@@ -27,8 +27,10 @@ public class SendListener implements ActionListener{
 			String message=fenetre.getMessageField().getText();
 			EchoClient.sent=message;
 			EchoClient.action=true;
-			fenetre.getConvPanel().append("Me: "+message+"\n\n");
-			fenetre.getMessageField().setText("");
+			if(!EchoClient.inGroup) {
+				fenetre.getConvPanel().append("Me: "+message+"\n\n");
+				fenetre.getMessageField().setText("");
+			}
 		}else if(e.getSource()==fenetre.getAddContactButton()) {
 			//TODO Ouvrir fenêtre pop-up
 			FenetreAddContact popup = new FenetreAddContact(fenetre.getContactPanel());

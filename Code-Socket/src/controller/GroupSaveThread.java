@@ -21,18 +21,23 @@ public class GroupSaveThread extends Thread {
 	        
 				// receive the packet
 				serverSocket.receive(packet);
+				
 				String messageReceived = new String(packet.getData());
-				sauvegarderMessage(messageReceived);
+				if(messageReceived!=null && !messageReceived.equals("")) {
+					System.out.println(messageReceived);
+					sauvegarderMessage(messageReceived);
+				}
+				
 			}
 		}catch(IOException ex){
 			ex.printStackTrace();
 		}
 	}
 	private void sauvegarderMessage(String messageToSave) {
-		String fileName = "../../../res/GroupConversation.txt";
+		String fileName = "res/GroupConversation.txt";
 		try {
 			FileWriter writer = new FileWriter(fileName,true);
-			writer.write(messageToSave+"/n");
+			writer.write(messageToSave+"\r\n");
 			writer.close();
 		}
 		catch(IOException ioe){

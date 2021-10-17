@@ -20,13 +20,18 @@ public class MulticastSendThread extends Thread {
 	public void run() {
 		try{
 			while(true){
-				BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-				String input = pseudoSender+": ";
-				input+=stdIn.readLine();
-				byte[] message = (input.getBytes());
-				DatagramPacket packet = new DatagramPacket(message, message.length, 
-		            InetAddress.getByName("228.5.6.7"), 6789);
-		        socket.send(packet);
+				
+				System.out.println("");
+				if(EchoClient.action) {
+					String input = "From "+pseudoSender+": "+EchoClient.sent;
+					System.out.println(input);
+					byte[] message = input.getBytes();
+					DatagramPacket packet = new DatagramPacket(message, message.length, 
+			            InetAddress.getByName("228.5.6.7"), 6789);
+			        socket.send(packet);
+			        EchoClient.action=false;
+				}
+				
 			}
 		}catch(IOException ex){
 			ex.printStackTrace();

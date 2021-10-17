@@ -12,7 +12,7 @@ public class TestMulticast {
 	
 	public static void recupererConversation(){
 		BufferedReader lecteur = null;
-		String file = "../../../res/GroupConversation.txt";
+		String file = "res/GroupConversation.txt";
 	    String ligne;
 
 	    try{

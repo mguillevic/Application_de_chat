@@ -18,6 +18,7 @@ public class ThreadSender extends Thread{
 	private PrintStream socOut;
 	private BufferedReader stdIn;
 	private String message;
+	private boolean alreadySent=false;
 	
 	ThreadSender(PrintStream s) {
 		this.socOut = s;
@@ -94,6 +95,11 @@ public class ThreadSender extends Thread{
 				}else if(EchoClient.changerConv) {
 					socOut.println("Oui;" + EchoClient.pseudoDestinataire);
 					EchoClient.changerConv=false;
+				}else if(EchoClient.inGroup) {
+					if(!alreadySent) {
+						socOut.println("inGroup;"+"Groupe");
+						alreadySent=true;
+					}
 				}else if(action) {
 					socOut.println("Non;" + EchoClient.sent);
 					EchoClient.action=false;
