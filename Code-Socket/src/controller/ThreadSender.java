@@ -1,4 +1,4 @@
-//package controller;
+package controller;
 //package stream;
 
 import java.io.BufferedReader;
@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import ihm.SendListener;
 
 public class ThreadSender extends Thread{
 	
@@ -30,8 +32,9 @@ public class ThreadSender extends Thread{
 	  		
 			while (true) {			
 				
+				//PARTIE SANS IHM
 				//Demande au client s'il veut changer de destinataire
-				System.out.println("Voulez-vous changer de destinataire ? Oui/Non");
+				/*System.out.println("Voulez-vous changer de destinataire ? Oui/Non");
 				String reponse = stdIn.readLine();
 				
 				if(reponse.equals("Oui")) {
@@ -80,6 +83,23 @@ public class ThreadSender extends Thread{
 					message=reponse+";"+messageSent;
 				}
 				socOut.println(message);
+				*/
+				
+				boolean action = EchoClient.action;
+				System.out.print("");
+				//PARTIE AVEC IHM
+				if(EchoClient.ajouterContact) {
+					socOut.println("ajouterContact;"+EchoClient.nomContactAAjouter);
+					EchoClient.ajouterContact = false;
+				}else if(EchoClient.changerConv) {
+					socOut.println("Oui;" + EchoClient.pseudoDestinataire);
+					EchoClient.changerConv=false;
+				}else if(action) {
+					socOut.println("Non;" + EchoClient.sent);
+					EchoClient.action=false;
+				}
+				
+				
 
 			}
 	  	} catch (Exception e) {

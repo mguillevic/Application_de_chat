@@ -1,4 +1,4 @@
-//package controller;
+package controller;
 /***
  * ClientThread
  * Example of a TCP server
@@ -85,16 +85,14 @@ public class ClientThread
 			BufferedReader socIn = null;
     		socIn = new BufferedReader(
     			new InputStreamReader(clientSocket.getInputStream()));    
-    		PrintStream socOut = new PrintStream(clientSocket.getOutputStream());
     		
+    		String [] line = socIn.readLine().split(";");
     		//Reception du pseudo du destinataire
-    		pseudoDestinataire = socIn.readLine();
+    		pseudoDestinataire = line[1];
     		
     		//Regarde si l'amis existe dans le catalogue du serveur
     		pseudoExiste= EchoServerMultiThreaded.cataloguePseudo.containsKey(pseudoDestinataire);	
     		
-    		//Envoie de la reponse : existence du pseudo ou non
-    		socOut.println(pseudoExiste);
     		
 		}catch(IOException ex) {
 			System.err.println("Error in ConnexionThread: "+ex);
@@ -108,7 +106,7 @@ public class ClientThread
 	
 	//Persistence du client dans le catalogue du serveur lors de la connexion
 	public void ajouterClientAuCatalogue() {
-		String fileName = "../../../res/"+"catalogue.txt";
+		String fileName = "res/"+"catalogue.txt";
 		try {
 			FileWriter writer = new FileWriter(fileName,true);
 			String messageSent = pseudo;
@@ -129,22 +127,11 @@ public class ClientThread
     		  connexion = connexion();
     		}
     		
-    		//Phase de selection du destinataire
-    		boolean pseudoTrouve = false;
-        	while (!pseudoTrouve) {
-        		pseudoTrouve = pseudoDestinataire();
-          	}
+    		
         	
         	
         	//Regarde si le destinataire est connecté
         	Socket clientSocketDestinataire = null;
-        	if(EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true")) {
-        		clientSocketDestinataire = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
-        		
-        	}
-        	
-        	//On précise que le client parle au destinataire choisi et pas un autre
-			EchoServerMultiThreaded.conversations.put(pseudo,pseudoDestinataire);
     		
         	ClientThreadConversation conversation = new ClientThreadConversation(clientSocket,clientSocketDestinataire,pseudo,pseudoDestinataire);
         	conversation.start();

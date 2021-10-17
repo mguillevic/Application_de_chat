@@ -1,14 +1,16 @@
-Marie;Wesh la street
-Marie;Salut Hugoo
-Marie;Saluut Hugo
-Marie;salut
-Marie;Salut Hugette
-Marie;Wesh
-Marie;Salut irr
-Marie;Hi!
-Marie;Saloute
-Marie;Degagez msieur
-Marie;Salut grand gaillard
-Marie;Il fait bo t'as vu
-Marie;Tadaa
-Sarah;Salut
+Marie;From Marie: Ouep
+Hugo;Me: Ouep
+Marie;From Marie: Wesh la street
+Marie;Me: Ca va dit?
+Marie;From Marie: bof bof
+Marie;From Marie: Yoo
+Marie;From Marie: Salut vieux
+Sarah;Me: Saluut toi
+Marie;From Marie: Salut ma gueule
+Marie;From Marie: jen ai marre
+Marie;From Marie: enorme
+Marie;From Marie: pff
+Marie;From Marie: tttt
+Marie;From Marie: hrhrhr
+Marie;Me: yoooo
+Thomas;From Thomas: Weshhh
