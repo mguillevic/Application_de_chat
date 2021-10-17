@@ -34,6 +34,8 @@ public class ThreadReceiver extends Thread{
 				//Affichage du message recu
 				String line = socIn.readLine();
 				String [] split = line.split(";");
+
+				
 				if(split.length>=2 && split[0].equals("ajouterContact")) {
 					
 					if(split[1].equals("true")) {

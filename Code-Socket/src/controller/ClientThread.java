@@ -37,6 +37,7 @@ public class ClientThread
 			//Ajout du client et de sa socket dans le catalogue et précise qu'il est connecté
 			EchoServerMultiThreaded.cataloguePseudo.put(pseudo,"true");
 			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
+			EchoServerMultiThreaded.conversations.put(pseudo,"false");
 			ajouterClientAuCatalogue();
 			return true;
 			
@@ -45,6 +46,7 @@ public class ClientThread
 			//Ajout de la socket dans le catalogue et précise que le client est connecté
 			EchoServerMultiThreaded.cataloguePseudo.replace(pseudo,"true");
 			EchoServerMultiThreaded.catalogueSocket.put(pseudo, clientSocket);
+			EchoServerMultiThreaded.conversations.put(pseudo,"false");
 			return true;
 			
 		}else{

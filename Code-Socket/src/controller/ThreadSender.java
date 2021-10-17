@@ -95,6 +95,7 @@ public class ThreadSender extends Thread{
 				}else if(EchoClient.changerConv) {
 					socOut.println("Oui;" + EchoClient.pseudoDestinataire);
 					EchoClient.changerConv=false;
+					alreadySent = false;
 				}else if(EchoClient.inGroup) {
 					if(!alreadySent) {
 						socOut.println("inGroup;"+"Groupe");

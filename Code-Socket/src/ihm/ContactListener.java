@@ -47,16 +47,22 @@ public class ContactListener implements MouseListener{
 		//TODO Implementer changement de conversation
 		if(e.getSource()==fenetre.getContactPanel().getLabelGroupe()) {
 			String message = fenetre.getClient().recupererConversationGroupe();
+			
 			try {
 				EchoClient.inGroup=true;
-				//fenetre.getClient().getTr().wait();
-				//fenetre.getClient().getTs().wait();
 				fenetre.getClient().rejoindreGroupe();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			fenetre.getConvPanel().setText(message);
+			List<JLabel> listeLabels = fenetre.getContactPanel().getListeLabels();
+			for(JLabel label:listeLabels) {
+				if(label!=fenetre.getContactPanel().getLabelGroupe()) {
+					label.setBackground(null);   //On met tous les contacts en blanc
+				}
+			}
+			fenetre.getContactPanel().getLabelGroupe().setBackground(Color.BLUE);
 			
 		}else {
 			JLabel clickedLabel = (JLabel)e.getSource();  //Label correspondant à un des contacts
@@ -69,11 +75,9 @@ public class ContactListener implements MouseListener{
 	
 				EchoClient.pseudoDestinataire=pseudoContact;
 				EchoClient.changerConv=true;
+				EchoClient.inGroup=false;
 				recuperationMesssagesRecus(pseudoContact);
-	
-				
-				
-				
+					
 				
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
@@ -86,6 +90,7 @@ public class ContactListener implements MouseListener{
 					label.setBackground(null);   //On met tous les contacts en blanc
 				}
 			}
+			fenetre.getContactPanel().getLabelGroupe().setBackground(null);
 			clickedLabel.setBackground(Color.BLUE);   //Sauf celui sur qui on a cliqué
 			fenetre.setCurrentContact(clickedLabel.getText());
 		}

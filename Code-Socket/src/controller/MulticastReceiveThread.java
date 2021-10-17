@@ -23,11 +23,8 @@ public class MulticastReceiveThread extends Thread{
 				// receive the packet
 				socket.receive(packet);
 				String messageReceived = new String(packet.getData());
+				Fenetre.convPanel.afficherMessageRecu(messageReceived);
 				
-				if(messageReceived!=null && !messageReceived.equals("")) {
-					System.out.println(messageReceived);
-					Fenetre.convPanel.afficherMessageRecu(messageReceived);
-				}
 			}
 		}catch(IOException ex){
 			ex.printStackTrace();

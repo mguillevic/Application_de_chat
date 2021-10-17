@@ -234,7 +234,7 @@ public class EchoClient {
 	    try{
 	    	lecteur = new BufferedReader(new FileReader(file));
 	    	while ((ligne = lecteur.readLine()) != null) {
-	    		buffer+=ligne;
+	    		buffer+=ligne+"\r\n";
 	    	}
 	  	    lecteur.close();
 	    }catch(FileNotFoundException exc){

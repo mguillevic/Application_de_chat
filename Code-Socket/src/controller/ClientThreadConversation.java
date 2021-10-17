@@ -94,7 +94,6 @@ public class ClientThreadConversation extends Thread{
 		  
 		  //Si line[0]=Oui, alors le client veut changer de destinataire
 		  if(line[0].equals("Oui")) {
-			  
 			  pseudoDestinataire =line[1];
 			  
 			  clientSocketReceiver=null;
@@ -107,10 +106,10 @@ public class ClientThreadConversation extends Thread{
 			//On pr�cise que le client parle au destinataire choisi et pas un autre
 			  EchoServerMultiThreaded.conversations.replace(pseudo,pseudoDestinataire);
 			  
+			  
 		  }else if(line[0].equals("inGroup")) {
 			  EchoServerMultiThreaded.conversations.replace(pseudo, "groupe");
 		  }else if(line[0].equals("ajouterContact")){
-			  
 			  String nomContact=line[1];
 			  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(pseudo);
 			  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
@@ -127,7 +126,7 @@ public class ClientThreadConversation extends Thread{
 			  
 			 
 		  }else {
-
+			  
 			  if(EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true")) {
 
 				  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
@@ -137,7 +136,7 @@ public class ClientThreadConversation extends Thread{
 			  
 			//On verifie que le destinataire est connect� et qu'il est aussi en conversation avec le client
 			  if(clientSocketReceiver==null && EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true") &&  EchoServerMultiThreaded.conversations.get(pseudoDestinataire).equals(pseudo)) {
-				 
+				  
 				  //Si le client vient de se connecter on lui attribut une socket
 				  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
 				  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
@@ -153,7 +152,7 @@ public class ClientThreadConversation extends Thread{
 				  }
 				  
 		      }else if(line.length>=1){
-		    	 
+		    	  
 		    	  //Le destinataire n'est pas connect� ou en conversation avec un autre client et le client ne veut pas changer de destinataire: on sauvegarde le message
 		    	  if(line[0].equals("Non")) {
 		    		  sauvegarderMessage(line[1]);
