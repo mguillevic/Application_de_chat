@@ -1,32 +1,44 @@
+package ihm;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import controller.EchoClient;
+
 import javax.swing.JButton;
 
 //Fenêtre principale de l'application
 
 public class Fenetre extends JFrame{
 	
-	private ConversationPanel convPanel = new ConversationPanel();
+	public static ConversationPanel convPanel = new ConversationPanel();
 	private JTextField messageField = new JTextField(20);
 	private JButton sendButton = new JButton("SEND");
 	private JButton addContactButton = new JButton("+ New Contact");
 	private JPanel panelWriteMessage = new JPanel();
-	private ContactPanel contactPanel = new ContactPanel(this);
+	public static ContactPanel contactPanel;
+	private EchoClient client;
 	
 	private String currentContact="";
 	
-	public Fenetre() {
+	public Fenetre(EchoClient c) throws IOException {
+		
 		this.setTitle("Application Chat");
 		this.setSize(800,600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		contactPanel = new ContactPanel(this);
+		
+		client=c;
+		c.commencerConversation();
 		
 		this.placerContactPanel();
 		this.placerMessageField();
@@ -91,4 +103,14 @@ public class Fenetre extends JFrame{
 	public void setCurrentContact(String text) {
 		currentContact = text;
 	}
+
+	public EchoClient getClient() {
+		return client;
+	}
+
+	public void setClient(EchoClient client) {
+		this.client = client;
+	}
+	
+	
 }

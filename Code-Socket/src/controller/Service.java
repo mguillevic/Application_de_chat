@@ -1,4 +1,4 @@
-//package controller;
+package controller;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -33,15 +33,11 @@ public class Service {
 	}
 	
 	public void ajouterAmis(String pseudo) {
-		echoClient.ajouterAmis(pseudo));
+		echoClient.ajouterAmis(pseudo);
 	}
 	
 	public void commencerConversation(String pseudoDest)throws IOException  {
-		echoClient.commencerConversation(pseudoDest);
-	}
-	
-	public boolean terminerConversation()throws IOException  {
-		return echoClient.terminerConv();
+		echoClient.commencerConversation();
 	}
 	
 	public String recupererPseudoClient(String ip) {

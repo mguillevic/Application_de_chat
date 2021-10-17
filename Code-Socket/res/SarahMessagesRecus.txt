@@ -1,14 +1,5 @@
-Marie;Haut
-Marie;Salut mdame
-Hugo;hugo il a rigol‚
-Hugo;ahaha
-Hugo;yo hugo demande de tes nouvelles
-Hugo;Wesh ta vu
-Hugo;pepouse hein
-Marie;poleoe
-Hugo;lelele
-Hugo;Derniere
-Marie;EEEEH
-Hugo;Hey
-Marie;Saluut
-Marie;Aloah
+Hugo;Daaa
+Marie;Sarah tu me manque
+Marie;From Marie: Yoo
+Hugo;From Hugo: Saluut toi
+Bigueno;From Bigueno: Yooo

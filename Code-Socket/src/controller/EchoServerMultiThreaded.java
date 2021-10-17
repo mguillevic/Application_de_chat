@@ -1,4 +1,4 @@
-//package controller;
+package controller;
 //package stream;
 /***
  * EchoServer
@@ -31,9 +31,9 @@ public class EchoServerMultiThreaded  {
 	
 	public EchoServerMultiThreaded() throws IOException{
 		cataloguePseudo = new HashMap<String,String>();
-		recupererClients();
 		catalogueSocket = new HashMap<String,Socket>();
 		conversations= new HashMap<String,String>();
+		recupererClients();
 		ipServer = InetAddress.getLocalHost().getHostAddress();
 		portServer = "1234";
 		
@@ -43,12 +43,13 @@ public class EchoServerMultiThreaded  {
 	//Recuperation des clients persisté dans le catalogue du serveur
 	public void recupererClients()throws IOException{
 		BufferedReader lecteur = null;
-		String file ="../../../res/catalogue.txt";
+		String file ="res/catalogue.txt";
 	    String ligne;
 	    try{
 	    	lecteur = new BufferedReader(new FileReader(file));
 	    	while ((ligne = lecteur.readLine()) != null) {
 	    		cataloguePseudo.put(ligne,"false");
+	    		conversations.put(ligne, "false");
 	    	}
 	  	    lecteur.close();
 	    }catch(FileNotFoundException exc){
@@ -61,12 +62,12 @@ public class EchoServerMultiThreaded  {
 	   EchoServerMultiThreaded server = new EchoServerMultiThreaded();
        ServerSocket listenSocket;
        
-		if (args.length != 1) {
+		/*if (args.length != 1) {
 			System.out.println("Usage: java EchoServer <EchoServer port>");
 			System.exit(1);
-		}
+		}*/
 		try {
-			listenSocket = new ServerSocket(Integer.parseInt(args[0])); //port
+			listenSocket = new ServerSocket(1234); //port
 			System.out.println("Server ready..."); 
 			
 			while (true) {

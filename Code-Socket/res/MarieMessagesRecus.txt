@@ -1,5 +1,17 @@
-Hugo;Salut
-Hugo;banaaaane
-Hugo;Ca va
-Hugo;Salut Marie
-Hugo;Saluuut
+Hugo;From Hugo: Saluut toi
+Hugo;From Hugo: Tu vas bieen
+Hugo;Me: Wesh la street
+Hugo;From Hugo: Ca va dit?
+Hugo;Me: bof bof
+Sarah;Me: Yoo
+Romain;Me: Saloute
+Hugo;Me: Yoo
+Hugo;Me: Salut vieux
+Hugo;Me: Salut ma gueule
+Hugo;Me: jen ai marre
+Hugo;Me: enorme
+Hugo;Me: pff
+Hugo;Me: tttt
+Hugo;Me: hrhrhr
+Hugo;From Hugo: yoooo
+Phill;Me: salut ca va frate

@@ -1,4 +1,4 @@
-//package controller;
+package controller;
 /***
  * EchoClient
  * Example of a TCP client 
@@ -10,7 +10,9 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -26,21 +28,33 @@ public class EchoClient {
     private ThreadReceiver tr;
 	private String ipServer;
 	private String portServer;
+	
 	public static String pseudo;
 	public static String pseudoDestinataire;
 	public static List<String> amis;
-	
+	public static String received;
+	public static String sent;
+	public static boolean action;
+	public static boolean changerConv;
 	
 	public static HashMap<String,String> messagesReceived; //Precise si le client a recu des messages de ses amis
-	public static HashMap<String,HashMap<Integer,String>> messagesRecus;//Stockage des messages recu des amis
+	public static HashMap<String,List<String>> messagesRecus;//Stockage des messages recu des amis
+	public static boolean contactAjoute;
+	public static boolean ajouterContact;
+	public static String nomContactAAjouter;
 	
 	
 	public EchoClient() throws IOException {
 		ipServer = "127.0.0.1";
 		portServer = "1234";
-		messagesRecus = new HashMap<String,HashMap<Integer,String>>();
+		messagesRecus = new HashMap<String,List<String>>();
 		messagesReceived = new HashMap<String,String>();
 		amis = new ArrayList<String>();
+		action=false;
+		changerConv=false;
+		contactAjoute=false;
+		ajouterContact=false;
+		nomContactAAjouter="";
 		
 		try {
       	    // creation socket ==> connection
@@ -64,12 +78,14 @@ public class EchoClient {
 	
 	//Connection au serveur avec un pseudo
 	public boolean connexion(String pseudo) throws IOException {
-		socOut.println(pseudo); 
-		String connexion=socIn.readLine();
-		boolean connection = connexion.equals("true");
-		if(connection==true) {
-			this.pseudo=pseudo;
-			connection=true;
+		boolean connection = false;
+		if(pseudo!=null || !pseudo.equals("")) {
+			socOut.println(pseudo); 
+			String connexion=socIn.readLine();
+			connection = connexion.equals("true");
+			if(connection==true) {
+				this.pseudo=pseudo;
+			}
 		}
 		return connection;
 	}
@@ -78,10 +94,11 @@ public class EchoClient {
 	//Choix de l'amis destinataire au près du serveur
 	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
 		//Envoi au serveur
-    	socOut.println(pseudoAmis);
+    	socOut.println("Oui"+";"+pseudoAmis);
     		
     	//Reponse du serveur
     	boolean reponseServeur = socIn.readLine().equals("true");
+
     	pseudoDestinataire = pseudoAmis;
     	return reponseServeur;
 	}
@@ -90,7 +107,7 @@ public class EchoClient {
 	//Récuperation des amis du client
 	public void recupererPseudosAmis() throws IOException{
 		BufferedReader lecteur = null;
-		String file = "../../../res/"+pseudo + "Amis.txt";
+		String file = "res/"+pseudo + "Amis.txt";
 	    String ligne;
 
 	    try{
@@ -133,12 +150,18 @@ public class EchoClient {
 	
 	//Persiste les amis du client dans un fichier
 	public static void sauvegarderAmis(String pseudoAmis) {
-		String fileName = "../../../res/"+pseudo+"Amis.txt";
+		String fileName = "res/"+pseudo+"Amis.txt";
+		String file = "res/"+pseudoAmis+"Amis.txt";
 		try {
 			FileWriter writer = new FileWriter(fileName,true);
 			String ami = pseudoAmis;
 			writer.write(ami+"\r\n");
 			writer.close();
+			
+			FileWriter fw = new FileWriter(file,true);
+			fw.write(pseudo+"\r\n");
+			fw.close();
+
 		}
 		catch(IOException ioe){
 			 System.err.println(ioe.getMessage());
@@ -149,14 +172,14 @@ public class EchoClient {
 	//Recuperation des message envoyés par l'ami avec le pseudoDest
 	public static void recupererMessagesRecus(String pseudoDest)throws IOException {
 		BufferedReader lecteur = null;
-		String file ="../../../res/"+ pseudo + "MessagesRecus.txt";
+		String file ="res/"+ pseudo + "MessagesRecus.txt";
+		
 		List<String> messages = null;
 	    String ligne;
-	   
+	    	   
 	    //Verifie que le pseudoDest correspond à un amis du client
 	    if(messagesRecus.containsKey(pseudoDest)) {
-	    	messagesRecus.replace(pseudoDest,new HashMap<Integer,String>());
-	    	
+	    	messagesRecus.replace(pseudoDest,new ArrayList<String>());
 	    	try{
 		    	lecteur = new BufferedReader(new FileReader(file));
 		    	int i=0;
@@ -166,7 +189,7 @@ public class EchoClient {
 		  	      	//Si le client a reçu des messages de cet amis on place les messages dans messagesRecus et on indique qu'il en a reçu dans messagesReceived
 		  	      	if(reponses[0].equals(pseudoDest)){
 		  	      		messagesReceived.replace(pseudoDest,"true");
-		  	      		messagesRecus.get(pseudoDest).put(i,reponses[1]);
+		  	      		messagesRecus.get(pseudoDest).add(reponses[1]);
 		  	      		i++;
 		  	      	}
 		  	      	
@@ -179,9 +202,22 @@ public class EchoClient {
 	    
 	}
 	
+	//Supprimer du fichier une fois qu'on a recu les messages
+	public void suppressionMessagesRecu() {
+		try{
+
+		    File file = new File("res/"+pseudo+"MessagesRecus.txt");
+		    PrintWriter printwriter = new PrintWriter(new FileOutputStream(file));
+		    printwriter.println("");
+		    
+		}catch(Exception e){
+		      e.printStackTrace();
+		}
+	}
+	
 	
 	//Lancement des thread sender et receiver lors du commencement de la première conversation
-	public void commencerConversation(String pseudoDest)throws IOException  {
+	public void commencerConversation()throws IOException  {
 		ts.start();
 		tr.start();
 	}	
@@ -193,6 +229,8 @@ public class EchoClient {
         stdIn.close();
         echoSocket.close();
 	}
+	
+	
   /**
   *  main method
   *  accepts a connection, receives a message from client then sends an echo to the client
