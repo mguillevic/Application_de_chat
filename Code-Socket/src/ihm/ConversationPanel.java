@@ -1,3 +1,5 @@
+package ihm;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -25,6 +27,10 @@ public class ConversationPanel extends JTextArea {
 	
 	public void setListeMessages(List<String> uneListe) {
 		this.listeMessages=uneListe;
+	}
+	
+	public void afficherMessageRecu(String message) {
+		this.append(message+"\n\n");
 	}
 	
 }//
