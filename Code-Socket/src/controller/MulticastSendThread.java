@@ -21,10 +21,10 @@ public class MulticastSendThread extends Thread {
 		try{
 			while(true){
 				
-				System.out.println("");
-				if(EchoClient.action) {
+				boolean action = EchoClient.action;
+				System.out.print("");
+				if(action && EchoClient.inGroup) {
 					String input = "From "+pseudoSender+": "+EchoClient.sent;
-					System.out.println(input);
 					byte[] message = input.getBytes();
 					DatagramPacket packet = new DatagramPacket(message, message.length, 
 			            InetAddress.getByName("228.5.6.7"), 6789);

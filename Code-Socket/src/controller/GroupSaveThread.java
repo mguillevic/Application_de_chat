@@ -23,10 +23,8 @@ public class GroupSaveThread extends Thread {
 				serverSocket.receive(packet);
 				
 				String messageReceived = new String(packet.getData());
-				if(messageReceived!=null && !messageReceived.equals("")) {
-					System.out.println(messageReceived);
-					sauvegarderMessage(messageReceived);
-				}
+				sauvegarderMessage(messageReceived);
+				
 				
 			}
 		}catch(IOException ex){
