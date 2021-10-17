@@ -36,7 +36,7 @@ public class Service {
 		echoClient.ajouterAmis(pseudo);
 	}
 	
-	public void commencerConversation(String pseudoDest)throws IOException  {
+	public void commencerConversation()throws IOException  {
 		echoClient.commencerConversation();
 	}
 	

@@ -44,7 +44,7 @@ public class ThreadSender extends Thread{
 					EchoClient.pseudoDestinataire = stdIn.readLine();
 					message=reponse+";"+EchoClient.pseudoDestinataire;
 					
-					//Ajout de l'amis s'ils ne sont pas déja amis
+					//Ajout de l'amis s'ils ne sont pas dï¿½ja amis
 					EchoClient.ajouterAmis(EchoClient.pseudoDestinataire);
 					
 					//Recuperation des messages recus

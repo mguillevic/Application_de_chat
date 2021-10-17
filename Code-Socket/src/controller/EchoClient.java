@@ -21,6 +21,7 @@ public class EchoClient {
 
 	
 	private Socket echoSocket = null;
+	private MulticastSocket groupSocket = null;
     private PrintStream socOut = null;
     private BufferedReader stdIn = null;
     private BufferedReader socIn = null;
@@ -91,7 +92,7 @@ public class EchoClient {
 	}
 	
 	
-	//Choix de l'amis destinataire au près du serveur
+	//Choix de l'amis destinataire au prï¿½s du serveur
 	public boolean selectionnerAmis(String pseudoAmis)throws IOException  {
 		//Envoi au serveur
     	socOut.println("Oui"+";"+pseudoAmis);
@@ -104,7 +105,7 @@ public class EchoClient {
 	}
 	
 	
-	//Récuperation des amis du client
+	//Rï¿½cuperation des amis du client
 	public void recupererPseudosAmis() throws IOException{
 		BufferedReader lecteur = null;
 		String file = "res/"+pseudo + "Amis.txt";
@@ -126,7 +127,7 @@ public class EchoClient {
 	  
 	}
 	
-	//Ajoute l'ami aux listes et les hashMap si le client n'est pas déja son ami. Fait une sauvegarde de cet amis
+	//Ajoute l'ami aux listes et les hashMap si le client n'est pas dï¿½ja son ami. Fait une sauvegarde de cet amis
 	public static boolean ajouterAmis(String pseudo) {
 		if(!chercherDansMesAmis(pseudo)) {
 			amis.add(pseudo);
@@ -169,15 +170,15 @@ public class EchoClient {
 	}
 	
 	
-	//Recuperation des message envoyés par l'ami avec le pseudoDest
+	//Recuperation des message envoyï¿½s par l'ami avec le pseudoDest
 	public static void recupererMessagesRecus(String pseudoDest)throws IOException {
 		BufferedReader lecteur = null;
 		String file ="res/"+ pseudo + "MessagesRecus.txt";
 		
 		List<String> messages = null;
 	    String ligne;
-	    	   
-	    //Verifie que le pseudoDest correspond à un amis du client
+	   
+	    //Verifie que le pseudoDest correspond ï¿½ un amis du client
 	    if(messagesRecus.containsKey(pseudoDest)) {
 	    	messagesRecus.replace(pseudoDest,new ArrayList<String>());
 	    	try{
@@ -186,7 +187,7 @@ public class EchoClient {
 		    	while ((ligne = lecteur.readLine()) != null) {
 		  	      	String [] reponses = ligne.split(";");
 		  	      	
-		  	      	//Si le client a reçu des messages de cet amis on place les messages dans messagesRecus et on indique qu'il en a reçu dans messagesReceived
+		  	      	//Si le client a reï¿½u des messages de cet amis on place les messages dans messagesRecus et on indique qu'il en a reï¿½u dans messagesReceived
 		  	      	if(reponses[0].equals(pseudoDest)){
 		  	      		messagesReceived.replace(pseudoDest,"true");
 		  	      		messagesRecus.get(pseudoDest).add(reponses[1]);
@@ -216,11 +217,40 @@ public class EchoClient {
 	}
 	
 	
-	//Lancement des thread sender et receiver lors du commencement de la première conversation
+	//Lancement des thread sender et receiver lors du commencement de la premiï¿½re conversation
 	public void commencerConversation()throws IOException  {
 		ts.start();
 		tr.start();
-	}	
+	}
+	
+	public void recupererConversationGroupe(){
+		BufferedReader lecteur = null;
+		String file = "../../../res/GroupConversation.txt";
+	    String ligne;
+
+	    try{
+	    	lecteur = new BufferedReader(new FileReader(file));
+	    	while ((ligne = lecteur.readLine()) != null) {
+	    		System.out.print(ligne);
+	    	}
+	  	    lecteur.close();
+	    }catch(FileNotFoundException exc){
+	    	  System.out.println("Erreur d'ouverture");
+	    }catch(IOException ioe){
+			ioe.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void rejoindreGroupe() {
+		recupererConversationGroupe();
+		groupSocket = new MulticastSocket(6789);
+		groupSocket.joinGroup(InetAddress.getByName("228.5.6.7"));
+		MulticastReceiveThread receiveThread = new MulticastReceiveThread(groupSocket);
+		MulticastSendThread sendThread = new MulticastSendThread(groupSocket,pseudo);
+		receiveThread.start();
+		sendThread.start(); 
+	}
 
 	//A la deconnexion on ferme les flux
 	public void endEchoClient() throws IOException {
