@@ -19,12 +19,12 @@ import javax.swing.JButton;
 
 public class Fenetre extends JFrame{
 	
-	public static ConversationPanel convPanel = new ConversationPanel();
 	private JTextField messageField = new JTextField(20);
 	private JButton sendButton = new JButton("SEND");
 	private JButton addContactButton = new JButton("+ New Contact");
 	private JPanel panelWriteMessage = new JPanel();
 	public static ContactPanel contactPanel;
+	public static ConversationPanel convPanel = new ConversationPanel();
 	private EchoClient client;
 	
 	private String currentContact="";

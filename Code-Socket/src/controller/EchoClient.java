@@ -242,7 +242,7 @@ public class EchoClient {
 	}
 	
 	@SuppressWarnings("deprecation")
-	public void rejoindreGroupe() {
+	public void rejoindreGroupe() throws IOException {
 		recupererConversationGroupe();
 		groupSocket = new MulticastSocket(6789);
 		groupSocket.joinGroup(InetAddress.getByName("228.5.6.7"));

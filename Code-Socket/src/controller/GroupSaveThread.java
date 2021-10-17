@@ -1,9 +1,10 @@
+package controller;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 
-//package controller.controller;
 
 public class GroupSaveThread extends Thread {
 	private MulticastSocket serverSocket;
