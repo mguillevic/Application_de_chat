@@ -21,9 +21,19 @@ public class MulticastReceiveThread extends Thread{
 				DatagramPacket packet = new DatagramPacket(message, message.length);
 	        
 				// receive the packet
-				socket.receive(packet);
-				String messageReceived = new String(packet.getData());
-				Fenetre.convPanel.afficherMessageRecu(messageReceived);
+				boolean isInGroupe = EchoClient.inGroup;
+				if(isInGroupe) {
+					
+					socket.receive(packet);
+					String messageReceived = new String(packet.getData());
+					if(EchoClient.inGroup) {
+						Fenetre.convPanel.afficherMessageRecu(messageReceived);
+						System.out.println(EchoClient.inGroup);
+					}
+					
+					
+				}
+				
 				
 			}
 		}catch(IOException ex){

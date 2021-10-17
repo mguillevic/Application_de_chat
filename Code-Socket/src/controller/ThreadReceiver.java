@@ -46,7 +46,8 @@ public class ThreadReceiver extends Thread{
 						EchoClient.ajouterAmis(split[1]);					
 					}
 					
-				}else {
+				}else if(!EchoClient.inGroup) {
+					
 					Fenetre.convPanel.afficherMessageRecu("From "+EchoClient.pseudoDestinataire+": "+line);
 				}
 				  

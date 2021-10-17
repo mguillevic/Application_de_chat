@@ -91,7 +91,6 @@ public class ClientThreadConversation extends Thread{
 		  //Lecture du message envoy�
 		  String[] line = socIn.readLine().split(";");
 		  
-		  
 		  //Si line[0]=Oui, alors le client veut changer de destinataire
 		  if(line[0].equals("Oui")) {
 			  pseudoDestinataire =line[1];
@@ -126,7 +125,7 @@ public class ClientThreadConversation extends Thread{
 			  
 			 
 		  }else {
-			  
+
 			  if(EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true")) {
 
 				  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
@@ -136,13 +135,13 @@ public class ClientThreadConversation extends Thread{
 			  
 			//On verifie que le destinataire est connect� et qu'il est aussi en conversation avec le client
 			  if(clientSocketReceiver==null && EchoServerMultiThreaded.cataloguePseudo.get(pseudoDestinataire).equals("true") &&  EchoServerMultiThreaded.conversations.get(pseudoDestinataire).equals(pseudo)) {
-				  
+
 				  //Si le client vient de se connecter on lui attribut une socket
 				  clientSocketReceiver = EchoServerMultiThreaded.catalogueSocket.get(pseudoDestinataire);
 				  socOut = new PrintStream(clientSocketReceiver.getOutputStream());
 				  
 		      }else if(clientSocketReceiver!=null &&  EchoServerMultiThreaded.conversations.get(pseudoDestinataire).equals(pseudo)){
-		    	  
+
 		    	//Le destinataire est connect� et le client ne veut pas changer de destinataire : on envoi le message
 				  if(line[0].equals("Non")) {
 					  socOut.println(line[1]);
@@ -152,7 +151,8 @@ public class ClientThreadConversation extends Thread{
 				  }
 				  
 		      }else if(line.length>=1){
-		    	  
+
+					System.out.println("dd");
 		    	  //Le destinataire n'est pas connect� ou en conversation avec un autre client et le client ne veut pas changer de destinataire: on sauvegarde le message
 		    	  if(line[0].equals("Non")) {
 		    		  sauvegarderMessage(line[1]);

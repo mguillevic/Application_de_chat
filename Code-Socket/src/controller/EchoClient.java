@@ -27,6 +27,8 @@ public class EchoClient {
     private BufferedReader socIn = null;
     private ThreadSender ts;
     private ThreadReceiver tr;
+    private static MulticastReceiveThread receiveThread;
+    private MulticastSendThread sendThread;
 	private String ipServer;
 	private String portServer;
 	
@@ -249,11 +251,12 @@ public class EchoClient {
 	public void rejoindreGroupe() throws IOException {
 		groupSocket = new MulticastSocket(6789);
 		groupSocket.joinGroup(InetAddress.getByName("228.5.6.7"));
-		MulticastReceiveThread receiveThread = new MulticastReceiveThread(groupSocket);
-		MulticastSendThread sendThread = new MulticastSendThread(groupSocket,pseudo);
+		receiveThread = new MulticastReceiveThread(groupSocket);
+		sendThread = new MulticastSendThread(groupSocket,pseudo);
 		receiveThread.start();
 		sendThread.start(); 
 	}
+	
 
 	//A la deconnexion on ferme les flux
 	public void endEchoClient() throws IOException {

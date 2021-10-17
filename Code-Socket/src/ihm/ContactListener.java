@@ -72,10 +72,13 @@ public class ContactListener implements MouseListener{
 				
 				//Effacer les textos de l'autre conv
 				fenetre.getConvPanel().setText("");
-	
+				if(EchoClient.inGroup=true) {
+					EchoClient.inGroup=false;
+				}
+				System.out.println("zz");
 				EchoClient.pseudoDestinataire=pseudoContact;
 				EchoClient.changerConv=true;
-				EchoClient.inGroup=false;
+				
 				recuperationMesssagesRecus(pseudoContact);
 					
 				
