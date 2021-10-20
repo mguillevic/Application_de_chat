@@ -2,19 +2,6 @@ package backend;
 //package stream;
 
 import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.swing.JLabel;
-
-import frontend.ContactPanel;
-import frontend.Fenetre;
 
 public class ThreadReceiver extends Thread{
 	

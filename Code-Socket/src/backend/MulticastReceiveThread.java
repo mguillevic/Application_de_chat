@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
 
-import frontend.Fenetre;
 
 public class MulticastReceiveThread extends Thread{
 	

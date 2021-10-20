@@ -3,16 +3,6 @@ package frontend;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-
-import backend.EchoClient;
-import backend.ThreadSender;
-
-import javax.swing.JLabel;
-
-//Listener pour envoyer un message
 
 public class SendListener implements ActionListener{
 	private Fenetre fenetre;

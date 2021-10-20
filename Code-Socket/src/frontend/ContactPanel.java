@@ -2,12 +2,9 @@ package frontend;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
-
-import backend.EchoClient;
 
 import javax.swing.JLabel;
 
@@ -15,7 +12,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 //Conteneur pour afficher la liste de tous les contacts de l'utilisateur
 

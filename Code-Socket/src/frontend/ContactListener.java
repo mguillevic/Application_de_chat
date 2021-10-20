@@ -4,15 +4,10 @@ import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
 
 import javax.swing.JLabel;
-
-import backend.EchoClient;
-
 //Listener pour changer de conversation lorsqu'on clique sur un des contacts
 
 public class ContactListener implements MouseListener{

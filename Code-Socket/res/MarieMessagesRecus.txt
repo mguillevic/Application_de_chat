@@ -46,3 +46,4 @@ Hugo;Me: Salute
 Hugo;From Hugo: AAA
 Sarah;Me: Salut sarah
 Sarah;From Sarah: tu vas bien
+Hugo;Me: Salut hugo

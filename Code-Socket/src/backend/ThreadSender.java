@@ -1,29 +1,17 @@
 package backend;
 //package stream;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintStream;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import frontend.SendListener;
 
 public class ThreadSender extends Thread{
 	
 	private PrintStream socOut;
-	private BufferedReader stdIn;
 	private String message;
 	private Services services;
 	private boolean alreadySent=false;
 	
 	ThreadSender(PrintStream s,Services services) {
 		this.socOut = s;
-		stdIn = new BufferedReader(new InputStreamReader(System.in));
 		message="";
 		this.services=services;
 	}

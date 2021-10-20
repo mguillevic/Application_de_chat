@@ -8,8 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import backend.EchoClient;
 import backend.Services;
 
 public class FenetreConnexion extends JFrame{
