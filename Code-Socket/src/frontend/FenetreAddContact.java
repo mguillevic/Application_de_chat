@@ -43,7 +43,7 @@ public class FenetreAddContact extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setLayout(null);
 		
-		validate.setBounds(10,70,50,20);
+		validate.setBounds(10,70,200,20);
 		validate.setText("Valider contact");
 		
 		//Envoie au serveur pour qu'il verifie que le contact existe
